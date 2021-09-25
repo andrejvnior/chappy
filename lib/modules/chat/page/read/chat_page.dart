@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:projects/modules/chat/models/chat.dart';
 import 'package:projects/modules/chat/page/create/chat_create_page.dart';
+import 'package:projects/modules/chat/page/read/widgets/message_item.dart';
 import 'package:projects/modules/home/pages/home_page.dart';
 import 'package:projects/modules/profile/models/profile.dart';
 import 'package:projects/widgets/chappy_button.dart';
@@ -21,6 +22,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   late ChatController controller;
+  final textEditingController = TextEditingController();
 
   @override
   void initState() {
@@ -57,12 +59,15 @@ class _ChatPageState extends State<ChatPage> {
             children: [
               Expanded(
                 child: ChappyTextInput(
+                  controller: textEditingController,
                   onChanged: controller.setText,
                   hintText: 'Send message',
                 ),
               ),
               TextButton(
-                onPressed: () => controller.sendMessage(),
+                onPressed: () => controller
+                    .sendMessage()
+                    .whenComplete(() => textEditingController.clear()),
                 child: Text('Enviar'),
               )
             ],
@@ -86,16 +91,12 @@ class _ChatPageState extends State<ChatPage> {
                 );
               }
               return ListView.builder(
+                  reverse: true,
                   itemCount: list.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        print('Message clicked: ${list[index].content}');
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(list[index].content),
-                      ),
+                    return MessageItem(
+                      message: list[index],
+                      profile: widget.profile,
                     );
                   });
             }),

@@ -79,6 +79,7 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(
                     builder: (context) => ChatPage(
                       chat: list[index],
+                      profile: widget.profile,
                     ),
                   ),
                 ),

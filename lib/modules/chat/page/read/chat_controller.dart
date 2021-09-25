@@ -12,11 +12,10 @@ class ChatController = ChatControllerBase with _$ChatController;
 abstract class ChatControllerBase with Store {
   ChatControllerBase(this.chat, this.profile) {
     print('Chat in controller: ${chat?.title}');
-    if(chat != null){
+    if (chat != null) {
       observableStream = chatRepository.getMessages(chat!.uuid).asObservable();
     }
   }
-
 
   Chat? chat;
   Profile? profile;
@@ -38,10 +37,12 @@ abstract class ChatControllerBase with Store {
   @computed
   List<Message> get messageList {
     print('Message in Controller...');
-    if(observableStream == null) return <Message>[];
+    if (observableStream == null) return <Message>[];
     final list = observableStream?.value?.toList() ?? <Message>[];
 
     print('Message list sucessfully built: ${list.length}');
+
+    list.sort((b, a) => a.createdAt.compareTo(b.createdAt));
 
     return list;
   }
@@ -56,6 +57,6 @@ abstract class ChatControllerBase with Store {
     );
     await chatRepository
         .sendMessage(message, chat!.uuid)
-        .then((value) => print('Message sent.'));
+        .then((value) => print('Message sent.')).whenComplete(() => setText(''));
   }
 }

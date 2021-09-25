@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:projects/modules/auth/pages/splash/splash_page.dart';
 import 'package:projects/themes/chappy_colors.dart';
-
-import 'modules/auth/pages/signin/signin_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

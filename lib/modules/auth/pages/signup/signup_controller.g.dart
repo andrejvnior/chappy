@@ -166,6 +166,17 @@ mixin _$SignUpController on SignUpControllerBase, Store {
   }
 
   @override
+  void setLoading() {
+    final _$actionInfo = _$SignUpControllerBaseActionController.startAction(
+        name: 'SignUpControllerBase.setLoading');
+    try {
+      return super.setLoading();
+    } finally {
+      _$SignUpControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setEmail(String v) {
     final _$actionInfo = _$SignUpControllerBaseActionController.startAction(
         name: 'SignUpControllerBase.setEmail');

@@ -9,21 +9,21 @@ class HomeController = HomeControllerBase with _$HomeController;
 
 abstract class HomeControllerBase with Store {
   HomeControllerBase(){
-    getChats();
+    observableStream = chatRepository.getChats().asObservable();
   }
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
   ChatRepository chatRepository = ChatRepository();
 
-  ObservableList<Chat> chatList = ObservableList<Chat>();
+  ObservableStream<List<Chat>>? observableStream;
 
-  @action
-  Future<void> getChats() async {
+  @computed
+  List<Chat> get chatList {
     print('Chat name in Controller...');
-    final list = await chatRepository.getChats().then((value) => value);
+    final list = observableStream?.value?.toList() ?? <Chat>[];
 
-    chatList = list.asObservable();
+    return list;
   }
 
   @action

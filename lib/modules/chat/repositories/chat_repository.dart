@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projects/modules/chat/models/chat.dart';
+import 'package:projects/modules/chat/models/message.dart';
 
 class ChatRepository {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -21,19 +22,29 @@ class ChatRepository {
     return Chat.fromMap(chat.docs.first.data());
   }
 
-  Future<List<Chat>> getChats() async {
-    print('Getting chats in Repository...');
-    final docs = await chats.get().then((value) => value.docs);
 
-    print('Succesfully got chats in Repository. Lenght: ${docs.length}');
-    List<Chat> list = [];
+  Stream<List<Chat>> getChats() {
+    print('Getting chats...');
+    return chats.snapshots().map((query) =>
+        query.docs.map((doc) => Chat.fromMap(doc.data())).toList());
+  }
 
-    for (final chat in docs) {
-      final c = Chat.fromMap(chat.data());
-      print('Chat name in Repository? ${c.title}');
-      list.add(c);
-    }
+  Future<void> sendMessage(Message message, String uuid) {
+    print('Sending message: ${message.content}...');
 
-    return list;
+    final messages = chats.doc(uuid).collection('messages');
+    return messages
+        .doc(message.uuid)
+        .set(message.toMap())
+        .then((value) => print('Message succesfully sent.'))
+        .catchError((error) => print('Error senting message.'));
+  }
+
+  Stream<List<Message>> getMessages(String uuid) {
+    print('Getting messages of $uuid...');
+
+    final messages = chats.doc(uuid).collection('messages');
+    return messages.snapshots().map((query) =>
+        query.docs.map((doc) => Message.fromMap(doc.data())).toList());
   }
 }

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:projects/modules/chat/page/create/chat_create_controller.dart';
 import 'package:projects/modules/chat/page/read/chat_page.dart';
+import 'package:projects/modules/profile/models/profile.dart';
 import 'package:projects/widgets/chappy_button.dart';
 import 'package:projects/widgets/chappy_text_input.dart';
 
 class ChatCreatePage extends StatefulWidget {
-  const ChatCreatePage({Key? key}) : super(key: key);
+  final Profile? profile;
+  const ChatCreatePage({Key? key, this.profile}) : super(key: key);
 
   @override
   _ChatCreatePageState createState() => _ChatCreatePageState();
@@ -20,7 +22,6 @@ class _ChatCreatePageState extends State<ChatCreatePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Criar Chat'),
-        automaticallyImplyLeading: false,
       ),
       body: Observer(
         builder: (_) {
@@ -53,6 +54,7 @@ class _ChatCreatePageState extends State<ChatCreatePage> {
                               MaterialPageRoute(
                                   builder: (context) => ChatPage(
                                     chat: _controller.chat,
+                                    profile: widget.profile,
                                   )));
                         }
                       });

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:projects/modules/auth/pages/signup/signup_page.dart';
 import 'package:projects/modules/home/pages/home_page.dart';
-import 'package:projects/themes/chappy_colors.dart';
 import 'package:projects/widgets/chappy_button.dart';
 import 'package:projects/widgets/chappy_text_input.dart';
 

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "713076158719",
+    "project_id": "chappy-37675",
+    "storage_bucket": "chappy-37675.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:713076158719:android:46ed29a02e5c62add25cca",
+        "android_client_info": {
+          "package_name": "com.chappy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "713076158719-n5msp2mgm21ceh6eflfav0fmsf60cfhh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2eDIYDnvxm-RjZD0QmGKz4smcTQpt_gU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "713076158719-n5msp2mgm21ceh6eflfav0fmsf60cfhh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

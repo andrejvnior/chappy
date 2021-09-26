@@ -27,34 +27,39 @@ class _SignUpPageState extends State<SignUpPage> {
           }
           return Container(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: ListView(
               children: [
                 ChappyTextInput(
                   hintText: 'Email',
                   onChanged: controller.setEmail,
                 ),
+                const SizedBox(height: 16),
                 ChappyTextInput(
                   hintText: 'Password',
                   onChanged: controller.setPassword,
                   obscureText: true,
                 ),
+                const SizedBox(height: 16),
                 ChappyTextInput(
                   hintText: 'Name',
                   onChanged: controller.setName,
                 ),
+                const SizedBox(height: 16),
                 ChappyTextInput(
                   hintText: 'Nickname',
                   onChanged: controller.setNickname,
                 ),
+                const SizedBox(height: 16),
                 ChappyTextInput(
                   hintText: 'Gender',
                   onChanged: controller.setGender,
                 ),
+                const SizedBox(height: 16),
                 ChappyTextInput(
                   hintText: 'Bio',
                   onChanged: controller.setBio,
                 ),
+                const SizedBox(height: 16),
                 ChappyTextInput(
                   hintText: controller.age.toString(),
                   // onChanged: _controller.setAge,

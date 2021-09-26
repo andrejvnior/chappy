@@ -29,6 +29,7 @@ class _SignInPageState extends State<SignInPage> {
               hintText: 'Email',
               onChanged: _controller.setEmail,
             ),
+            const SizedBox(height: 16),
             ChappyTextInput(
               hintText: 'Password',
               onChanged: _controller.setPassword,
@@ -49,7 +50,7 @@ class _SignInPageState extends State<SignInPage> {
             const SizedBox(height: 16),
             ChappyButton(
               onPressed: () async {
-                if(_controller.isValid){
+                if (_controller.isValid) {
                   _controller.signIn().then((hasProfile) {
                     if (hasProfile) {
                       Navigator.push(
@@ -62,7 +63,7 @@ class _SignInPageState extends State<SignInPage> {
                       );
                     }
                   });
-                } else{
+                } else {
                   _controller.setErrorMessage();
                 }
               },

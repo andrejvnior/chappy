@@ -53,8 +53,12 @@ class _HomePageState extends State<HomePage> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ChatPage(profile: widget.profile,)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChatPage(
+                              profile: widget.profile,
+                            )));
               },
               child: const Text('chat'),
             ),
@@ -84,14 +88,50 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 child: Container(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      Text(list[index].title),
-                      Text(list[index].description),
-                    ],
-                  ),
-                ),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                      width: 1,
+                      color: Colors.grey.shade400,
+                    ))),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      list[index].title,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    list[index].createdAt.toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Text(list[index].description),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Icon(
+                          Icons.arrow_forward_ios_outlined,
+                          size: 20,
+                          color: Colors.grey.shade400,
+                        ),
+                      ],
+                    )),
               );
             });
       }),

@@ -9,6 +9,13 @@ part of 'chat_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ChatController on ChatControllerBase, Store {
+  Computed<List<Profile>>? _$profileListComputed;
+
+  @override
+  List<Profile> get profileList => (_$profileListComputed ??=
+          Computed<List<Profile>>(() => super.profileList,
+              name: 'ChatControllerBase.profileList'))
+      .value;
   Computed<List<Message>>? _$messageListComputed;
 
   @override
@@ -89,6 +96,7 @@ mixin _$ChatController on ChatControllerBase, Store {
     return '''
 isLoading: ${isLoading},
 text: ${text},
+profileList: ${profileList},
 messageList: ${messageList},
 memberList: ${memberList}
     ''';

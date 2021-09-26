@@ -20,4 +20,10 @@ class ProfileRepository {
 
     return Profile.fromMap(userProfile.docs.first.data());
   }
+
+  Future<List<Profile>> getProfiles() async {
+    final userProfile = await users.get();
+
+    return userProfile.docs.map((e) => Profile.fromMap(e.data())).toList();
+  }
 }

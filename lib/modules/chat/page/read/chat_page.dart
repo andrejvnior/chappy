@@ -36,7 +36,9 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        title: Observer(
+          builder: (_)=>const Text('Chat'),
+        ),
         actions: [
           widget.chat == null
               ? IconButton(
@@ -136,7 +138,9 @@ class _ChatPageState extends State<ChatPage> {
             ),
             Expanded(
               child: Observer(builder: (_) {
-                final list = controller.memberList;
+                print('Observing...');
+                final list = controller.profileList;
+                print('Observing ${list.length}');
                 if (list.isEmpty) {
                   return const Center(
                     child: CircularProgressIndicator(),
@@ -146,8 +150,9 @@ class _ChatPageState extends State<ChatPage> {
                     reverse: true,
                     itemCount: list.length,
                     itemBuilder: (BuildContext context, int index) {
+                      print('List name: ${list[index].name}');
                       return Container(
-                        child: Text(list[index].id ?? 'Error'),
+                        child: Text(list[index].name),
                       );
                     });
               }),

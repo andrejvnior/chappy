@@ -70,8 +70,8 @@ class ChatRepository {
           'online': false,
           'logoutAt': DateTime.now(),
         })
-        .then((value) => print("Member updated"))
-        .catchError((error) => print("Failed to update user: $error"));
+        .then((value) => print("Member logged out"))
+        .catchError((error) => print("Failed to logout member: $error"));
   }
 
   Stream<List<Member>> getMembers(Chat chat) {

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:projects/modules/chat/models/category.dart';
 import 'package:projects/modules/chat/page/create/chat_create_controller.dart';
 import 'package:projects/modules/chat/page/read/chat_page.dart';
 import 'package:projects/modules/profile/models/profile.dart';
+import 'package:projects/themes/chappy_colors.dart';
 import 'package:projects/widgets/chappy_button.dart';
 import 'package:projects/widgets/chappy_text_input.dart';
 
 class ChatCreatePage extends StatefulWidget {
   final Profile? profile;
+
   const ChatCreatePage({Key? key, this.profile}) : super(key: key);
 
   @override
@@ -15,7 +18,7 @@ class ChatCreatePage extends StatefulWidget {
 }
 
 class _ChatCreatePageState extends State<ChatCreatePage> {
-  final _controller = ChatCreateController();
+  final controller = ChatCreateController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,7 @@ class _ChatCreatePageState extends State<ChatCreatePage> {
       ),
       body: Observer(
         builder: (_) {
-          if (_controller.isLoading) {
+          if (controller.isLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -37,39 +40,63 @@ class _ChatCreatePageState extends State<ChatCreatePage> {
               children: [
                 ChappyTextInput(
                   hintText: 'Title',
-                  onChanged: _controller.setTitle,
+                  onChanged: controller.setTitle,
                 ),
                 ChappyTextInput(
                   hintText: 'Description',
-                  onChanged: _controller.setDescription,
+                  onChanged: controller.setDescription,
+                ),
+                SizedBox(
+                  height: 100,
+                  child: ListView.builder(
+                    itemCount: categoryList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Observer(
+                        builder: (_)=>GestureDetector(
+                          onTap: () =>
+                              controller.setCategory(categoryList[index].id),
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color:
+                              categoryList[index].id == controller.category
+                                  ? ChappyColors.primaryColor
+                                  : Colors.grey.shade400,
+                            ),
+                            child: Text(categoryList[index].title),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
                 const SizedBox(height: 16),
                 ChappyButton(
                   onPressed: () async {
-                    if (_controller.isValid) {
-                      _controller.createChat().then((isChatCreated) {
+                    if (controller.isValid) {
+                      controller.createChat().then((isChatCreated) {
                         if (isChatCreated) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ChatPage(
-                                    chat: _controller.chat,
-                                    profile: widget.profile,
-                                  )));
+                                        chat: controller.chat,
+                                        profile: widget.profile,
+                                      )));
                         }
                       });
                     } else {
-                      _controller.setErrorMessage();
+                      controller.setErrorMessage();
                     }
                   },
                   title: 'Create',
                 ),
                 Observer(
                   builder: (_) {
-                    if (_controller.errorMessage.isEmpty) return Container();
+                    if (controller.errorMessage.isEmpty) return Container();
 
                     return Text(
-                      _controller.errorMessage,
+                      controller.errorMessage,
                       style: const TextStyle(
                         color: Colors.red,
                       ),

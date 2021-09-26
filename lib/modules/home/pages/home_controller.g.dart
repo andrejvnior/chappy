@@ -17,6 +17,21 @@ mixin _$HomeController on HomeControllerBase, Store {
               name: 'HomeControllerBase.chatList'))
           .value;
 
+  final _$categoryAtom = Atom(name: 'HomeControllerBase.category');
+
+  @override
+  int get category {
+    _$categoryAtom.reportRead();
+    return super.category;
+  }
+
+  @override
+  set category(int value) {
+    _$categoryAtom.reportWrite(value, super.category, () {
+      super.category = value;
+    });
+  }
+
   final _$logoutAsyncAction = AsyncAction('HomeControllerBase.logout');
 
   @override
@@ -24,9 +39,24 @@ mixin _$HomeController on HomeControllerBase, Store {
     return _$logoutAsyncAction.run(() => super.logout());
   }
 
+  final _$HomeControllerBaseActionController =
+      ActionController(name: 'HomeControllerBase');
+
+  @override
+  void setCategory(int v) {
+    final _$actionInfo = _$HomeControllerBaseActionController.startAction(
+        name: 'HomeControllerBase.setCategory');
+    try {
+      return super.setCategory(v);
+    } finally {
+      _$HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
+category: ${category},
 chatList: ${chatList}
     ''';
   }

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:projects/modules/auth/pages/signin/signin_page.dart';
+import 'package:projects/modules/chat/models/category.dart';
 import 'package:projects/modules/chat/page/read/chat_page.dart';
+import 'package:projects/modules/home/pages/widgets/chat_item.dart';
 import 'package:projects/modules/profile/models/profile.dart';
+import 'package:projects/themes/chappy_colors.dart';
+import 'package:projects/widgets/chappy_title.dart';
 
 import 'home_controller.dart';
 
@@ -54,87 +58,72 @@ class _HomePageState extends State<HomePage> {
             TextButton(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ChatPage(
-                              profile: widget.profile,
-                            )));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatPage(
+                      profile: widget.profile,
+                    ),
+                  ),
+                );
               },
               child: const Text('chat'),
             ),
           ],
         ),
       ),
-      body: Observer(builder: (_) {
-        final list = controller.chatList;
-
-        if (list.isEmpty) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        return ListView.builder(
-            itemCount: list.length,
-            itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatPage(
-                      chat: list[index],
-                      profile: widget.profile,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 16),
+          const ChappyTitle(title: 'Chats'),
+          const SizedBox(height: 16),
+          SizedBox(
+            height: 36,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: categoryList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Observer(
+                  builder: (_) => GestureDetector(
+                    onTap: () => controller.setCategory(categoryList[index].id),
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 8),
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: categoryList[index].id == controller.category
+                            ? ChappyColors.primaryColor
+                            : Colors.grey.shade400,
+                      ),
+                      child: Text(categoryList[index].title),
                     ),
                   ),
-                ),
-                child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(
-                      width: 1,
-                      color: Colors.grey.shade400,
-                    ))),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      list[index].title,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    list[index].createdAt.toString(),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              Text(list[index].description),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Icon(
-                          Icons.arrow_forward_ios_outlined,
-                          size: 20,
-                          color: Colors.grey.shade400,
-                        ),
-                      ],
-                    )),
-              );
-            });
-      }),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 16),
+          const ChappyTitle(title: 'Chats'),
+          const SizedBox(height: 16),
+          Expanded(
+            child: Observer(builder: (_) {
+              final list = controller.chatList;
+
+              if (list.isEmpty) {
+                return const Center(
+                  child: Text('No chats found.'),
+                );
+              }
+
+              return ListView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ChatItem(
+                        chat: list[index], profile: widget.profile);
+                  });
+            }),
+          ),
+        ],
+      ),
     );
   }
 }

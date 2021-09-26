@@ -3,10 +3,12 @@ import 'package:projects/models/firebase_model.dart';
 class Chat extends FirebaseModel {
   final String title;
   final String description;
+  final int category;
 
   Chat({
     this.title = '',
     this.description = '',
+    this.category = 0,
     String uuid = '',
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -17,6 +19,7 @@ class Chat extends FirebaseModel {
   Chat.fromMap(Map<String, dynamic> map)
       : title = map['title'] as String,
         description = map['description'] as String,
+        category = map['category'] as int,
         super.fromMap(map);
 
   @override
@@ -25,6 +28,7 @@ class Chat extends FirebaseModel {
       'uuid': uuid,
       'title': title,
       'description': description,
+      'category': category,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'appVersion': appVersion,

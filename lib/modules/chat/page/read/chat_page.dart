@@ -42,14 +42,18 @@ class _ChatPageState extends State<ChatPage> {
                     onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const ChatCreatePage())),
+                            builder: (context) => ChatCreatePage(
+                                  profile: widget.profile,
+                                ))),
                     icon: const Icon(Icons.create),
                   )
                 : IconButton(
                     onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const HomePage())),
+                            builder: (context) => HomePage(
+                                  profile: widget.profile,
+                                ))),
                     icon: const Icon(Icons.exit_to_app),
                   ),
           ],

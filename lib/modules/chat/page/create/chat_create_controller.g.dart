@@ -77,6 +77,21 @@ mixin _$ChatCreateController on ChatCreateControllerBase, Store {
     });
   }
 
+  final _$categoryAtom = Atom(name: 'ChatCreateControllerBase.category');
+
+  @override
+  int get category {
+    _$categoryAtom.reportRead();
+    return super.category;
+  }
+
+  @override
+  set category(int value) {
+    _$categoryAtom.reportWrite(value, super.category, () {
+      super.category = value;
+    });
+  }
+
   final _$createChatAsyncAction =
       AsyncAction('ChatCreateControllerBase.createChat');
 
@@ -122,12 +137,24 @@ mixin _$ChatCreateController on ChatCreateControllerBase, Store {
   }
 
   @override
+  void setCategory(int v) {
+    final _$actionInfo = _$ChatCreateControllerBaseActionController.startAction(
+        name: 'ChatCreateControllerBase.setCategory');
+    try {
+      return super.setCategory(v);
+    } finally {
+      _$ChatCreateControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 errorMessage: ${errorMessage},
 isLoading: ${isLoading},
 title: ${title},
 description: ${description},
+category: ${category},
 isValid: ${isValid}
     ''';
   }

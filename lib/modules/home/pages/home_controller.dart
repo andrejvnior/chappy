@@ -8,7 +8,7 @@ part 'home_controller.g.dart';
 class HomeController = HomeControllerBase with _$HomeController;
 
 abstract class HomeControllerBase with Store {
-  HomeControllerBase(){
+  HomeControllerBase() {
     observableStream = chatRepository.getChats().asObservable();
   }
 
@@ -21,7 +21,12 @@ abstract class HomeControllerBase with Store {
   @computed
   List<Chat> get chatList {
     print('Chat name in Controller...');
-    final list = observableStream?.value?.toList() ?? <Chat>[];
+
+    List<Chat> list = observableStream?.value?.toList() ?? <Chat>[];
+
+    if (category != 0) {
+      list = list.where((chat) => chat.category == category).toList();
+    }
 
     return list;
   }
@@ -30,4 +35,10 @@ abstract class HomeControllerBase with Store {
   Future<void> logout() async {
     await auth.signOut();
   }
+
+  @observable
+  int category = 0;
+
+  @action
+  void setCategory(int v) => category = v;
 }

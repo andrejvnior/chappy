@@ -5,7 +5,8 @@ import 'package:uuid/uuid.dart';
 
 part 'chat_create_controller.g.dart';
 
-class ChatCreateController = ChatCreateControllerBase with _$ChatCreateController;
+class ChatCreateController = ChatCreateControllerBase
+    with _$ChatCreateController;
 
 abstract class ChatCreateControllerBase with Store {
   ChatRepository chatRepository = ChatRepository();
@@ -27,11 +28,17 @@ abstract class ChatCreateControllerBase with Store {
   @observable
   String description = '';
 
+  @observable
+  int category = 0;
+
   @action
   void setTitle(String v) => title = v;
 
   @action
   void setDescription(String v) => description = v;
+
+  @action
+  void setCategory(int v) => category = v;
 
   @action
   Future<bool> createChat() async {
@@ -40,9 +47,11 @@ abstract class ChatCreateControllerBase with Store {
     chat = Chat(
       title: title,
       description: description,
+      category: category,
       uuid: const Uuid().v1(),
       createdAt: DateTime.now(),
     );
+
     final chatCreated = await chatRepository.createChat(chat);
 
     isLoading = false;

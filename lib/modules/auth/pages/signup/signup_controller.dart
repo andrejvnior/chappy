@@ -125,8 +125,6 @@ abstract class SignUpControllerBase with Store {
       gender: gender,
       bio: bio,
       age: age,
-      uuid: const Uuid().v1(),
-      createdAt: DateTime.now(),
     );
 
     final profileCreated = await profileRepository.createProfile(profile);

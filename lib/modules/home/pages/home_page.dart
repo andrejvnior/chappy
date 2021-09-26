@@ -57,6 +57,7 @@ class _HomePageState extends State<HomePage> {
             ),
             TextButton(
               onPressed: () {
+                print('Profile: ${widget.profile?.uuid}');
                 Navigator.push(
                   context,
                   MaterialPageRoute(

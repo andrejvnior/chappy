@@ -1,25 +1,23 @@
+import 'package:uuid/uuid.dart';
+
 class FirebaseModel {
   String uuid;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  int appVersion;
+  DateTime createdAt;
 
-  FirebaseModel(this.uuid, this.createdAt, this.updatedAt, this.appVersion);
+  FirebaseModel(this.uuid, this.createdAt){
+    uuid = const Uuid().v1();
+    createdAt = DateTime.now();
+  }
 
   FirebaseModel.fromMap(Map<String, dynamic> map)
       : uuid = map['uuid'] as String,
         createdAt = DateTime.fromMillisecondsSinceEpoch(
-            map['createdAt'].millisecondsSinceEpoch),
-        updatedAt = DateTime.fromMillisecondsSinceEpoch(
-            map['updatedAt'].millisecondsSinceEpoch),
-        appVersion = map['appVersion'] as int;
+            map['createdAt'].millisecondsSinceEpoch);
 
   Map<String, dynamic> toMap() {
     return {
       'uuid': uuid,
       'createdAt': createdAt,
-      'updatedAt': updatedAt,
-      'appVersion': appVersion,
     };
   }
 }

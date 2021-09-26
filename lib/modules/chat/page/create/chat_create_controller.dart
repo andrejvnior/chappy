@@ -48,8 +48,6 @@ abstract class ChatCreateControllerBase with Store {
       title: title,
       description: description,
       category: category,
-      uuid: const Uuid().v1(),
-      createdAt: DateTime.now(),
     );
 
     final chatCreated = await chatRepository.createChat(chat);

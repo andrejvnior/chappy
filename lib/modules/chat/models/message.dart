@@ -9,10 +9,7 @@ class Message extends FirebaseModel {
     this.createdBy = '',
     String uuid = '',
     DateTime? createdAt,
-    DateTime? updatedAt,
-    int appVersion = 0,
-  }) : super(uuid, createdAt = createdAt ?? DateTime.now(),
-      updatedAt = updatedAt ?? DateTime.now(), appVersion);
+  }) : super(uuid, createdAt = createdAt ?? DateTime.now());
 
   Message.fromMap(Map<String, dynamic> map)
       : content = map['message'] as String,
@@ -26,8 +23,6 @@ class Message extends FirebaseModel {
       'message': content,
       'createdBy': createdBy,
       'createdAt': createdAt,
-      'updatedAt': updatedAt,
-      'appVersion': appVersion,
     };
   }
 }

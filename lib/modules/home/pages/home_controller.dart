@@ -28,6 +28,8 @@ abstract class HomeControllerBase with Store {
       list = list.where((chat) => chat.category == category).toList();
     }
 
+    print('Sucessfully got chats in controller... ${list.length}');
+
     return list;
   }
 

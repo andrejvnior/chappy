@@ -51,17 +51,19 @@ class _ChatCreatePageState extends State<ChatCreatePage> {
                   child: ListView.builder(
                     itemCount: categoryList.length,
                     itemBuilder: (BuildContext context, int index) {
+                      if (index == 0) return Container();
+
                       return Observer(
-                        builder: (_)=>GestureDetector(
+                        builder: (_) => GestureDetector(
                           onTap: () =>
                               controller.setCategory(categoryList[index].id),
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               color:
-                              categoryList[index].id == controller.category
-                                  ? ChappyColors.primaryColor
-                                  : Colors.grey.shade400,
+                                  categoryList[index].id == controller.category
+                                      ? ChappyColors.primaryColor
+                                      : Colors.grey.shade400,
                             ),
                             child: Text(categoryList[index].title),
                           ),

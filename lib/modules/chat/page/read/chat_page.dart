@@ -35,25 +35,30 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Chappy'),
+          title: const Text('Chat'),
           actions: [
             widget.chat == null
                 ? IconButton(
                     onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChatCreatePage(
-                                  profile: widget.profile,
-                                ))),
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatCreatePage(
+                          profile: widget.profile,
+                        ),
+                      ),
+                    ),
                     icon: const Icon(Icons.create),
                   )
                 : IconButton(
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HomePage(
-                                  profile: widget.profile,
-                                ))),
+                    onPressed: () {
+                      print('Profile in chat: ${widget.profile?.uuid}');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomePage(
+                                    profile: widget.profile,
+                                  )));
+                    },
                     icon: const Icon(Icons.exit_to_app),
                   ),
           ],
@@ -68,7 +73,9 @@ class _ChatPageState extends State<ChatPage> {
                         onPressed: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const ChatCreatePage())),
+                                builder: (context) => ChatCreatePage(
+                                      profile: widget.profile,
+                                    ))),
                         title: 'Create chat',
                       ),
                     )
@@ -109,7 +116,7 @@ class _ChatPageState extends State<ChatPage> {
                       onPressed: () => controller
                           .sendMessage()
                           .whenComplete(() => textEditingController.clear()),
-                      child: Text('Enviar'),
+                      child: const Text('Enviar'),
                     ),
                   ],
                 )),

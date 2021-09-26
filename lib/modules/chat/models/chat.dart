@@ -11,10 +11,10 @@ class Chat extends FirebaseModel {
     this.category = 0,
     String uuid = '',
     DateTime? createdAt,
-    DateTime? updatedAt,
-    int appVersion = 0,
-  }) : super(uuid, createdAt = createdAt ?? DateTime.now(),
-            updatedAt = updatedAt ?? DateTime.now(), appVersion);
+  }) : super(
+          uuid,
+          createdAt = createdAt ?? DateTime.now(),
+        );
 
   Chat.fromMap(Map<String, dynamic> map)
       : title = map['title'] as String,
@@ -25,13 +25,11 @@ class Chat extends FirebaseModel {
   @override
   Map<String, dynamic> toMap() {
     return {
-      'uuid': uuid,
+      'uuid': title,
       'title': title,
       'description': description,
       'category': category,
       'createdAt': createdAt,
-      'updatedAt': updatedAt,
-      'appVersion': appVersion,
     };
   }
 }

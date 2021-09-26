@@ -16,6 +16,13 @@ mixin _$ChatController on ChatControllerBase, Store {
           Computed<List<Message>>(() => super.messageList,
               name: 'ChatControllerBase.messageList'))
       .value;
+  Computed<List<Member>>? _$memberListComputed;
+
+  @override
+  List<Member> get memberList =>
+      (_$memberListComputed ??= Computed<List<Member>>(() => super.memberList,
+              name: 'ChatControllerBase.memberList'))
+          .value;
 
   final _$isLoadingAtom = Atom(name: 'ChatControllerBase.isLoading');
 
@@ -55,6 +62,14 @@ mixin _$ChatController on ChatControllerBase, Store {
     return _$sendMessageAsyncAction.run(() => super.sendMessage());
   }
 
+  final _$logoutMemberAsyncAction =
+      AsyncAction('ChatControllerBase.logoutMember');
+
+  @override
+  Future<void> logoutMember() {
+    return _$logoutMemberAsyncAction.run(() => super.logoutMember());
+  }
+
   final _$ChatControllerBaseActionController =
       ActionController(name: 'ChatControllerBase');
 
@@ -74,7 +89,8 @@ mixin _$ChatController on ChatControllerBase, Store {
     return '''
 isLoading: ${isLoading},
 text: ${text},
-messageList: ${messageList}
+messageList: ${messageList},
+memberList: ${memberList}
     ''';
   }
 }

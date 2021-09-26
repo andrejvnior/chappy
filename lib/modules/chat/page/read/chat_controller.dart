@@ -1,5 +1,6 @@
 import 'package:mobx/mobx.dart';
 import 'package:projects/modules/chat/models/chat.dart';
+import 'package:projects/modules/chat/models/member.dart';
 import 'package:projects/modules/chat/models/message.dart';
 import 'package:projects/modules/chat/repositories/chat_repository.dart';
 import 'package:projects/modules/profile/models/profile.dart';
@@ -13,7 +14,10 @@ abstract class ChatControllerBase with Store {
   ChatControllerBase(this.chat, this.profile) {
     print('Chat in controller: ${chat?.title}');
     if (chat != null) {
-      observableStream = chatRepository.getMessages(chat!.uuid).asObservable();
+      observableStreamMessage =
+          chatRepository.getMessages(chat!).asObservable();
+      print('Initiate members...');
+      observableStreamMember = chatRepository.getMembers(chat!).asObservable();
     }
   }
 
@@ -32,13 +36,14 @@ abstract class ChatControllerBase with Store {
 
   ChatRepository chatRepository = ChatRepository();
 
-  ObservableStream<List<Message>>? observableStream;
+  ObservableStream<List<Message>>? observableStreamMessage;
+  ObservableStream<List<Member>>? observableStreamMember;
 
   @computed
   List<Message> get messageList {
     print('Message in Controller...');
-    if (observableStream == null) return <Message>[];
-    final list = observableStream?.value?.toList() ?? <Message>[];
+    if (observableStreamMessage == null) return <Message>[];
+    final list = observableStreamMessage?.value?.toList() ?? <Message>[];
 
     print('Message list sucessfully built: ${list.length}');
 
@@ -52,11 +57,36 @@ abstract class ChatControllerBase with Store {
     message = Message(
       content: text,
       createdBy: profile?.uuid ?? '',
-      uuid: const Uuid().v1(),
-      createdAt: DateTime.now(),
     );
     await chatRepository
-        .sendMessage(message, chat!.uuid)
-        .then((value) => print('Message sent.')).whenComplete(() => setText(''));
+        .sendMessage(message, chat!)
+        .then((value) => print('Message sent.'))
+        .whenComplete(() => setText(''));
+  }
+
+  @computed
+  List<Member> get memberList {
+    print('Member in Controller...');
+    if (observableStreamMember == null) return <Member>[];
+    List<Member> list = observableStreamMember?.value?.toList() ?? <Member>[];
+
+    print('Members list sucessfully built: ${list.length}');
+
+    list = list.where((member) => member.online).toList();
+
+    return list;
+  }
+
+  @action
+  Future<void> logoutMember() async {
+    print('Logging out profile... ${profile?.uuid}');
+    print('Logging out from chat... ${chat?.uuid}');
+    Member member =
+        memberList.where((m) => m.id == profile?.uuid && m.online).first;
+
+    await chatRepository
+        .logoutMember(member, chat!)
+        .then((value) => print('Message sent.'))
+        .whenComplete(() => setText(''));
   }
 }

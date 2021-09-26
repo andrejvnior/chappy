@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:projects/modules/chat/models/chat.dart';
 import 'package:projects/modules/chat/page/read/chat_page.dart';
@@ -6,20 +8,13 @@ import 'package:projects/modules/profile/models/profile.dart';
 class ChatItem extends StatelessWidget {
   final Chat chat; 
   final Profile? profile;
-  const ChatItem({Key? key, required this.chat, this.profile}) : super(key: key);
+  final VoidCallback? onPressed;
+  const ChatItem({Key? key, required this.chat, this.profile, this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ChatPage(
-            chat: chat,
-            profile: profile,
-          ),
-        ),
-      ),
+      onTap: onPressed,
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(

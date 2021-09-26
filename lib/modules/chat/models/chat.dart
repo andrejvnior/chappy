@@ -25,7 +25,7 @@ class Chat extends FirebaseModel {
   @override
   Map<String, dynamic> toMap() {
     return {
-      'uuid': title,
+      'uuid': uuid,
       'title': title,
       'description': description,
       'category': category,

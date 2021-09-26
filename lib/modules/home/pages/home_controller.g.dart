@@ -32,6 +32,14 @@ mixin _$HomeController on HomeControllerBase, Store {
     });
   }
 
+  final _$createMemberAsyncAction =
+      AsyncAction('HomeControllerBase.createMember');
+
+  @override
+  Future<void> createMember(Chat chat) {
+    return _$createMemberAsyncAction.run(() => super.createMember(chat));
+  }
+
   final _$logoutAsyncAction = AsyncAction('HomeControllerBase.logout');
 
   @override

@@ -18,7 +18,13 @@ class ChatCreatePage extends StatefulWidget {
 }
 
 class _ChatCreatePageState extends State<ChatCreatePage> {
-  final controller = ChatCreateController();
+  late ChatCreateController controller;
+
+  @override
+  void initState() {
+    controller = ChatCreateController(widget.profile);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

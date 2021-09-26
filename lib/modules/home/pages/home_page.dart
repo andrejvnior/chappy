@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    controller = HomeController();
+    controller = HomeController(widget.profile);
     super.initState();
   }
 
@@ -119,7 +119,21 @@ class _HomePageState extends State<HomePage> {
                   itemCount: list.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ChatItem(
-                        chat: list[index], profile: widget.profile);
+                        onPressed: () {
+                          controller
+                              .createMember(list[index])
+                              .whenComplete(() => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatPage(
+                                        chat: list[index],
+                                        profile: widget.profile,
+                                      ),
+                                    ),
+                                  ));
+                        },
+                        chat: list[index],
+                        profile: widget.profile);
                   });
             }),
           ),

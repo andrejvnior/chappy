@@ -11,7 +11,7 @@ class HomeController = HomeControllerBase with _$HomeController;
 
 abstract class HomeControllerBase with Store {
   HomeControllerBase(this.profile) {
-    observableStream = chatRepository.getChats().asObservable();
+    observableStream = chatRepository.chats().asObservable();
   }
 
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -25,16 +25,12 @@ abstract class HomeControllerBase with Store {
   Member member = Member();
 
   @computed
-  List<Chat> get chatList {
-    print('Chat name in Controller...');
-
+  List<Chat> get chats {
     List<Chat> list = observableStream?.value?.toList() ?? <Chat>[];
 
     if (category != 0) {
       list = list.where((chat) => chat.category == category).toList();
     }
-
-    print('Sucessfully got chats in controller... ${list.length}');
 
     return list;
   }
@@ -47,9 +43,7 @@ abstract class HomeControllerBase with Store {
       online: true,
       logoutAt: DateTime.now(),
     );
-    await chatRepository
-        .createMember(member, chat.uuid)
-        .then((value) => print('Member created.'));
+    await chatRepository.enter(member, chat.uuid);
   }
 
   @action

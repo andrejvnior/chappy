@@ -57,7 +57,6 @@ class _HomePageState extends State<HomePage> {
             ),
             TextButton(
               onPressed: () {
-                print('Profile: ${widget.profile?.uuid}');
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -107,7 +106,7 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 16),
           Expanded(
             child: Observer(builder: (_) {
-              final list = controller.chatList;
+              final list = controller.chats;
 
               if (list.isEmpty) {
                 return const Center(

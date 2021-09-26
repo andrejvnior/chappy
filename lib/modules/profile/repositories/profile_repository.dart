@@ -6,7 +6,6 @@ class ProfileRepository {
   final users = FirebaseFirestore.instance.collection('users');
 
   Future<bool> createProfile(Profile profile) {
-    print('Creating profile for ${profile.name}...');
 
     return users
         .doc(profile.uuid)

@@ -23,7 +23,6 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   navigateUser() async {
-    print('Navigating... ${_controller.isLogged}');
     if (_controller.isLogged) {
       await _controller.getProfile();
       Timer(

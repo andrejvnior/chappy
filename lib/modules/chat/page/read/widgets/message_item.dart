@@ -13,8 +13,6 @@ class MessageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Message created by: ${message.createdBy}');
-    print('Profile ID: ${profile?.uuid}');
     final bool isProfile = message.createdBy == profile?.uuid;
 
     return Row(

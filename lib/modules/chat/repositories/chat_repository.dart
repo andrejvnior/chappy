@@ -5,12 +5,10 @@ import 'package:projects/modules/chat/models/message.dart';
 
 class ChatRepository {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final chats = FirebaseFirestore.instance.collection('chats');
+  final collection = FirebaseFirestore.instance.collection('chats');
 
   Future<bool> createChat(Chat chat) {
-    print('Creating chat with title ${chat.title}...');
-
-    return chats
+    return collection
         .doc(chat.uuid)
         .set(chat.toMap())
         .then((value) => true)
@@ -18,21 +16,20 @@ class ChatRepository {
   }
 
   Future<Chat> getChat(Chat chat) async {
-    final c = await chats.where('uuid', isEqualTo: chat.uuid).get();
+    final c = await collection.where('uuid', isEqualTo: chat.uuid).get();
 
     return Chat.fromMap(c.docs.first.data());
   }
 
-  Stream<List<Chat>> getChats() {
+  Stream<List<Chat>> chats() {
     print('Getting chats...');
-    return chats.snapshots().map(
+    return collection.snapshots().map(
         (query) => query.docs.map((doc) => Chat.fromMap(doc.data())).toList());
   }
 
   Future<void> sendMessage(Message message, Chat chat) {
-    print('Sending message: ${message.content}...');
 
-    final messages = chats.doc(chat.uuid).collection('messages');
+    final messages = collection.doc(chat.uuid).collection('messages');
     return messages
         .doc(message.uuid)
         .set(message.toMap())
@@ -40,19 +37,18 @@ class ChatRepository {
         .catchError((error) => print('Error senting message.'));
   }
 
-  Stream<List<Message>> getMessages(Chat chat) {
-    print('Getting messages of ${chat.uuid}uuid...');
+  Stream<List<Message>> messages(Chat chat) {
 
-    final messages = chats.doc(chat.uuid).collection('messages');
+    final messages = collection.doc(chat.uuid).collection('messages');
+
     return messages.snapshots().map((query) =>
         query.docs.map((doc) => Message.fromMap(doc.data())).toList());
   }
 
-  Future<void> createMember(Member member, String uuid) {
-    print('Creating member with id ${member.id}...');
-    print('Creating ddsdsd with id ${uuid}...');
+  Future<void> enter(Member member, String uuid) {
 
-    final members = chats.doc(uuid).collection('members');
+    final members = collection.doc(uuid).collection('members');
+
     return members
         .doc(member.uuid)
         .set(member.toMap())
@@ -60,10 +56,8 @@ class ChatRepository {
         .catchError((error) => print('Error creating member.'));
   }
 
-  Future<void> logoutMember(Member member,Chat chat) {
-    print('Logging out in repository... ${member.uuid}');
-    print('Logging out from chat in repository... ${chat.uuid}');
-    final members = chats.doc(chat.uuid).collection('members');
+  Future<void> exit(Member member,Chat chat) {
+    final members = collection.doc(chat.uuid).collection('members');
     return members
         .doc(member.uuid)
         .update({
@@ -74,9 +68,8 @@ class ChatRepository {
         .catchError((error) => print("Failed to logout member: $error"));
   }
 
-  Stream<List<Member>> getMembers(Chat chat) {
-    print('Getting members at ${chat.uuid}...');
-    final members = chats.doc(chat.uuid).collection('members');
+  Stream<List<Member>> members(Chat chat) {
+    final members = collection.doc(chat.uuid).collection('members');
     return members.snapshots().map((query) =>
         query.docs.map((doc) => Member.fromMap(doc.data())).toList());
   }

@@ -32,6 +32,7 @@ class Profile extends FirebaseModel {
             map['age'].millisecondsSinceEpoch),
         super.fromMap(map);
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'uuid': uuid,

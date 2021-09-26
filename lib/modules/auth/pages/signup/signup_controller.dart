@@ -2,7 +2,6 @@ import 'package:mobx/mobx.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projects/modules/profile/repositories/profile_repository.dart';
-import 'package:uuid/uuid.dart';
 
 import 'package:projects/modules/profile/models/profile.dart';
 
@@ -75,23 +74,13 @@ abstract class SignUpControllerBase with Store {
   void setAge(DateTime v) => age = v;
 
   Future<bool> signUp() async {
-    print('Registering user...');
     try {
-      print('Email: $email');
-      print('Password: $password');
-      print('Name: $name');
-      print('Name: $nickname');
-      print('Gender: $gender');
-      print('Name: $bio');
-
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      print('User created...');
 
       if (userCredential.user != null) {
-        print('$name successfully registered to auth...');
         final isProfileCreated = await createProfile();
 
         if (isProfileCreated) {
@@ -103,21 +92,17 @@ abstract class SignUpControllerBase with Store {
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
         errorMessage = 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
         errorMessage = 'The account already exists for that email.';
       }
     } catch (e) {
-      print(e);
+      errorMessage = e.toString();
     }
     return false;
   }
 
   Future<bool> createProfile() async {
-    print('Creating profile for $name...');
-
     profile = Profile(
       email: email,
       name: name,

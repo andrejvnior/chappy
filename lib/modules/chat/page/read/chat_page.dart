@@ -7,6 +7,7 @@ import 'package:projects/modules/home/pages/home_page.dart';
 import 'package:projects/modules/profile/models/profile.dart';
 import 'package:projects/themes/chappy_colors.dart';
 import 'package:projects/widgets/chappy_button.dart';
+import 'package:projects/widgets/chappy_list_tile.dart';
 import 'package:projects/widgets/chappy_text_input.dart';
 import 'package:projects/widgets/chappy_title.dart';
 
@@ -35,131 +36,168 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Observer(
-          builder: (_)=>const Text('Chat'),
+        appBar: AppBar(
+          title: const Text('Chat'),
         ),
-        actions: [
-          widget.chat == null
-              ? IconButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatCreatePage(
-                        profile: widget.profile,
-                      ),
-                    ),
-                  ),
-                  icon: const Icon(Icons.create),
-                )
-              : IconButton(
-                  onPressed: () {
-                    print('Logout profile: ${widget.profile?.uuid}');
-                    controller.logoutMember().whenComplete(
-                          () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage(
-                                        profile: widget.profile,
-                                      ))),
-                        );
-                  },
-                  icon: const Icon(Icons.exit_to_app),
-                ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: widget.chat == null
-                ? Container(
-                    alignment: Alignment.center,
-                    child: ChappyButton(
-                      onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChatCreatePage(
-                                    profile: widget.profile,
-                                  ))),
-                      title: 'Create chat',
-                    ),
-                  )
-                : Observer(builder: (_) {
-                    final list = controller.messageList;
-                    if (list.isEmpty) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    return ListView.builder(
-                        reverse: true,
-                        itemCount: list.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return MessageItem(
-                            message: list[index],
-                            profile: widget.profile,
-                          );
-                        });
-                  }),
-          ),
-          Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: ChappyTextInput(
-                      controller: textEditingController,
-                      onChanged: controller.setText,
-                      hintText: 'Send message',
-                    ),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      primary: ChappyColors.primaryColor,
-                    ),
-                    onPressed: () => controller
-                        .sendMessage()
-                        .whenComplete(() => textEditingController.clear()),
-                    child: const Text('Enviar'),
-                  ),
-                ],
-              )),
-        ],
-      ),
-      drawer: Drawer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        body: Column(
           children: [
-            const SizedBox(height: 16),
-            const SizedBox(height: 16),
-            const ChappyTitle(
-              title: 'Pessoas online',
-            ),
             Expanded(
-              child: Observer(builder: (_) {
-                print('Observing...');
-                final list = controller.profileList;
-                print('Observing ${list.length}');
-                if (list.isEmpty) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
+              child: widget.chat == null
+                  ? Container(
+                      alignment: Alignment.center,
+                      child: ChappyButton(
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatCreatePage(
+                                      profile: widget.profile,
+                                    ))),
+                        title: 'Create chat',
+                      ),
+                    )
+                  : Observer(builder: (_) {
+                      final list = controller.messages;
+                      if (list.isEmpty) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return ListView.builder(
+                          reverse: true,
+                          itemCount: list.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return MessageItem(
+                              message: list[index],
+                              profile: widget.profile,
+                            );
+                          });
+                    }),
+            ),
+            Observer(
+              builder: (_) {
+                if (controller.private) {
+                  return SizedBox(
+                    height: 200,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 16),
+                        const ChappyTitle(
+                          title: 'Search profile',
+                        ),
+                        const SizedBox(height: 16),
+                        Expanded(
+                          child: Observer(
+                            builder: (_) {
+                              final list = controller.profiles;
+                              if (list.isEmpty) {
+                                return Container();
+                              }
+                              return ListView.builder(
+                                  itemCount: list.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return ChappyListTile(
+                                      leading: Image.network(
+                                        'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png',
+                                        width: 20,
+                                      ),
+                                      title: Text(list[index].name),
+                                      trailing: Icon(
+                                        Icons.arrow_forward_ios_outlined,
+                                        size: 20,
+                                        color: Colors.grey.shade400,
+                                      ),
+                                    );
+                                  });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 }
-                return ListView.builder(
-                    reverse: true,
-                    itemCount: list.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      print('List name: ${list[index].name}');
-                      return Container(
-                        child: Text(list[index].name),
-                      );
-                    });
-              }),
-            )
+                return Container();
+              },
+            ),
+            Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Observer(
+                        builder: (_) => ChappyTextInput(
+                          controller: textEditingController,
+                          onChanged: controller.private
+                              ? controller.setSearch
+                              : controller.setText,
+                          hintText: 'Send message',
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        primary: ChappyColors.primaryColor,
+                      ),
+                      onPressed: () => controller
+                          .sendMessage()
+                          .whenComplete(() => textEditingController.clear()),
+                      child: const Text('Enviar'),
+                    ),
+                  ],
+                )),
           ],
         ),
-      ),
-    );
+        drawer: Drawer(
+          child: Observer(builder: (_) {
+            final list = controller.profiles;
+            if (list.isEmpty) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                const SizedBox(height: 16),
+                ChappyTitle(
+                  title: 'Online (${list.length})',
+                ),
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: list.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        // TODO: Substitute image
+                        return ChappyListTile(
+                          leading: Image.network(
+                            'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png',
+                            width: 36,
+                          ),
+                          title: Text(list[index].name),
+                          trailing: Icon(
+                            Icons.arrow_forward_ios_outlined,
+                            size: 20,
+                            color: Colors.grey.shade400,
+                          ),
+                        );
+                      }),
+                ),
+                ChappyButton(
+                  onPressed: () => controller.exit().whenComplete(
+                        () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomePage(
+                                      profile: widget.profile,
+                                    ))),
+                      ),
+                  title: 'Get out',
+                )
+              ],
+            );
+          }),
+        ));
   }
 }

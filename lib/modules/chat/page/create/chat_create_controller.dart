@@ -3,7 +3,6 @@ import 'package:projects/modules/chat/models/chat.dart';
 import 'package:projects/modules/chat/models/member.dart';
 import 'package:projects/modules/chat/repositories/chat_repository.dart';
 import 'package:projects/modules/profile/models/profile.dart';
-import 'package:uuid/uuid.dart';
 
 part 'chat_create_controller.g.dart';
 
@@ -58,7 +57,7 @@ abstract class ChatCreateControllerBase with Store {
 
     final chatCreated = await chatRepository.createChat(chat);
 
-    createMember();
+    enter();
 
     isLoading = false;
 
@@ -66,15 +65,14 @@ abstract class ChatCreateControllerBase with Store {
   }
 
   @action
-  Future<void> createMember() async {
+  Future<void> enter() async {
     member = Member(
       id: profile?.uuid,
       online: true,
       logoutAt: DateTime.now(),
     );
     await chatRepository
-        .createMember(member, chat.uuid)
-        .then((value) => print('Member created.'));
+        .enter(member, chat.uuid);
   }
 
   @computed

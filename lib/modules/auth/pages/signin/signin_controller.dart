@@ -38,7 +38,6 @@ abstract class SignInControllerBase with Store {
   void setPassword(String v) => password = v;
 
   Future<bool> signIn() async {
-    print('Signing user...');
     isLoading = true;
     try {
       UserCredential userCredential = await FirebaseAuth.instance
@@ -51,10 +50,8 @@ abstract class SignInControllerBase with Store {
       return false;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
         errorMessage = 'No user found for that email.';
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
         errorMessage = 'Wrong password provided for that user.';
       }
     }

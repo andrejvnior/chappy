@@ -5,7 +5,6 @@ import 'package:projects/modules/chat/models/message.dart';
 import 'package:projects/modules/chat/repositories/chat_repository.dart';
 import 'package:projects/modules/profile/models/profile.dart';
 import 'package:projects/modules/profile/repositories/profile_repository.dart';
-import 'package:uuid/uuid.dart';
 
 part 'chat_controller.g.dart';
 
@@ -13,12 +12,9 @@ class ChatController = ChatControllerBase with _$ChatController;
 
 abstract class ChatControllerBase with Store {
   ChatControllerBase(this.chat, this.profile) {
-    print('Chat in controller: ${chat?.title}');
     if (chat != null) {
-      observableStreamMessage =
-          chatRepository.getMessages(chat!).asObservable();
-      print('Initiate members...');
-      observableStreamMember = chatRepository.getMembers(chat!).asObservable();
+      observableStreamMessage = chatRepository.messages(chat!).asObservable();
+      observableStreamMember = chatRepository.members(chat!).asObservable();
     }
     observableStreamProfile = profileRepository.getProfiles().asObservable();
   }
@@ -45,20 +41,14 @@ abstract class ChatControllerBase with Store {
   ObservableFuture<List<Profile>>? observableStreamProfile;
 
   @computed
-  List<Profile> get profileList {
-    print('Profile in Controller...');
+  List<Profile> get profiles {
     if (observableStreamProfile == null) return <Profile>[];
     List<Profile> list =
         observableStreamProfile?.value?.toList() ?? <Profile>[];
 
-    print('Profile list sucessfully built: ${list.length}');
-
     List<Profile> profiles = <Profile>[];
-    if (memberList.isNotEmpty) {
-      for (final member in memberList) {
-        print('Members in profile list: ${member.id}');
-        print(
-            'Profile in loop: ${list.where((element) => element.uuid == member.id).first.name}');
+    if (members.isNotEmpty) {
+      for (final member in members) {
         if (member.online) {
           final profile =
               list.where((element) => element.uuid == member.id).first;
@@ -68,16 +58,20 @@ abstract class ChatControllerBase with Store {
       }
     }
 
+    if (private && search.isNotEmpty) {
+      final replaced = search.replaceFirst(RegExp('@'), '');
+      profiles =
+          profiles.where((profile) => profile.name.contains(replaced)).toList();
+    }
+
     return profiles;
   }
 
   @computed
-  List<Message> get messageList {
-    print('Message in Controller...');
+  List<Message> get messages {
     if (observableStreamMessage == null) return <Message>[];
-    final list = observableStreamMessage?.value?.toList() ?? <Message>[];
 
-    print('Message list sucessfully built: ${list.length}');
+    final list = observableStreamMessage?.value?.toList() ?? <Message>[];
 
     list.sort((b, a) => a.createdAt.compareTo(b.createdAt));
 
@@ -92,17 +86,14 @@ abstract class ChatControllerBase with Store {
     );
     await chatRepository
         .sendMessage(message, chat!)
-        .then((value) => print('Message sent.'))
         .whenComplete(() => setText(''));
   }
 
   @computed
-  List<Member> get memberList {
-    print('Member in Controller...');
+  List<Member> get members {
     if (observableStreamMember == null) return <Member>[];
-    List<Member> list = observableStreamMember?.value?.toList() ?? <Member>[];
 
-    print('Members list sucessfully built: ${list.length}');
+    List<Member> list = observableStreamMember?.value?.toList() ?? <Member>[];
 
     list = list.where((member) => member.online).toList();
 
@@ -110,15 +101,27 @@ abstract class ChatControllerBase with Store {
   }
 
   @action
-  Future<void> logoutMember() async {
-    print('Logging out profile... ${profile?.uuid}');
-    print('Logging out from chat... ${chat?.uuid}');
+  Future<void> exit() async {
     Member member =
-        memberList.where((m) => m.id == profile?.uuid && m.online).first;
+        members.where((m) => m.id == profile?.uuid && m.online).first;
 
-    await chatRepository
-        .logoutMember(member, chat!)
-        .then((value) => print('Message sent.'))
-        .whenComplete(() => setText(''));
+    await chatRepository.exit(member, chat!).whenComplete(() => setText(''));
+  }
+
+  @computed
+  bool get private {
+    return text.isNotEmpty && text[0] == '@';
+  }
+
+  @observable
+  String search = '';
+
+  @action
+  void setSearch(String v) {
+    search = v;
+
+    if (search.isEmpty) {
+      text = '';
+    }
   }
 }

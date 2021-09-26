@@ -9,27 +9,33 @@ part of 'chat_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ChatController on ChatControllerBase, Store {
-  Computed<List<Profile>>? _$profileListComputed;
+  Computed<List<Profile>>? _$profilesComputed;
 
   @override
-  List<Profile> get profileList => (_$profileListComputed ??=
-          Computed<List<Profile>>(() => super.profileList,
-              name: 'ChatControllerBase.profileList'))
-      .value;
-  Computed<List<Message>>? _$messageListComputed;
-
-  @override
-  List<Message> get messageList => (_$messageListComputed ??=
-          Computed<List<Message>>(() => super.messageList,
-              name: 'ChatControllerBase.messageList'))
-      .value;
-  Computed<List<Member>>? _$memberListComputed;
-
-  @override
-  List<Member> get memberList =>
-      (_$memberListComputed ??= Computed<List<Member>>(() => super.memberList,
-              name: 'ChatControllerBase.memberList'))
+  List<Profile> get profiles =>
+      (_$profilesComputed ??= Computed<List<Profile>>(() => super.profiles,
+              name: 'ChatControllerBase.profiles'))
           .value;
+  Computed<List<Message>>? _$messagesComputed;
+
+  @override
+  List<Message> get messages =>
+      (_$messagesComputed ??= Computed<List<Message>>(() => super.messages,
+              name: 'ChatControllerBase.messages'))
+          .value;
+  Computed<List<Member>>? _$membersComputed;
+
+  @override
+  List<Member> get members =>
+      (_$membersComputed ??= Computed<List<Member>>(() => super.members,
+              name: 'ChatControllerBase.members'))
+          .value;
+  Computed<bool>? _$privateComputed;
+
+  @override
+  bool get private => (_$privateComputed ??= Computed<bool>(() => super.private,
+          name: 'ChatControllerBase.private'))
+      .value;
 
   final _$isLoadingAtom = Atom(name: 'ChatControllerBase.isLoading');
 
@@ -61,6 +67,21 @@ mixin _$ChatController on ChatControllerBase, Store {
     });
   }
 
+  final _$searchAtom = Atom(name: 'ChatControllerBase.search');
+
+  @override
+  String get search {
+    _$searchAtom.reportRead();
+    return super.search;
+  }
+
+  @override
+  set search(String value) {
+    _$searchAtom.reportWrite(value, super.search, () {
+      super.search = value;
+    });
+  }
+
   final _$sendMessageAsyncAction =
       AsyncAction('ChatControllerBase.sendMessage');
 
@@ -69,12 +90,11 @@ mixin _$ChatController on ChatControllerBase, Store {
     return _$sendMessageAsyncAction.run(() => super.sendMessage());
   }
 
-  final _$logoutMemberAsyncAction =
-      AsyncAction('ChatControllerBase.logoutMember');
+  final _$exitAsyncAction = AsyncAction('ChatControllerBase.exit');
 
   @override
-  Future<void> logoutMember() {
-    return _$logoutMemberAsyncAction.run(() => super.logoutMember());
+  Future<void> exit() {
+    return _$exitAsyncAction.run(() => super.exit());
   }
 
   final _$ChatControllerBaseActionController =
@@ -92,13 +112,26 @@ mixin _$ChatController on ChatControllerBase, Store {
   }
 
   @override
+  void setSearch(String v) {
+    final _$actionInfo = _$ChatControllerBaseActionController.startAction(
+        name: 'ChatControllerBase.setSearch');
+    try {
+      return super.setSearch(v);
+    } finally {
+      _$ChatControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 isLoading: ${isLoading},
 text: ${text},
-profileList: ${profileList},
-messageList: ${messageList},
-memberList: ${memberList}
+search: ${search},
+profiles: ${profiles},
+messages: ${messages},
+members: ${members},
+private: ${private}
     ''';
   }
 }

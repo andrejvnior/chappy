@@ -100,12 +100,11 @@ mixin _$ChatCreateController on ChatCreateControllerBase, Store {
     return _$createChatAsyncAction.run(() => super.createChat());
   }
 
-  final _$createMemberAsyncAction =
-      AsyncAction('ChatCreateControllerBase.createMember');
+  final _$enterAsyncAction = AsyncAction('ChatCreateControllerBase.enter');
 
   @override
-  Future<void> createMember() {
-    return _$createMemberAsyncAction.run(() => super.createMember());
+  Future<void> enter() {
+    return _$enterAsyncAction.run(() => super.enter());
   }
 
   final _$ChatCreateControllerBaseActionController =

@@ -1,8 +1,6 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:projects/modules/chat/models/chat.dart';
-import 'package:projects/modules/chat/page/read/chat_page.dart';
 import 'package:projects/modules/profile/models/profile.dart';
 
 class ChatItem extends StatelessWidget {

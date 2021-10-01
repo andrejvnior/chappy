@@ -96,14 +96,14 @@ mixin _$ChatCreateController on ChatCreateControllerBase, Store {
       AsyncAction('ChatCreateControllerBase.createChat');
 
   @override
-  Future<bool> createChat() {
+  Future<SaveResult> createChat() {
     return _$createChatAsyncAction.run(() => super.createChat());
   }
 
   final _$enterAsyncAction = AsyncAction('ChatCreateControllerBase.enter');
 
   @override
-  Future<void> enter() {
+  Future<SaveResult> enter() {
     return _$enterAsyncAction.run(() => super.enter());
   }
 

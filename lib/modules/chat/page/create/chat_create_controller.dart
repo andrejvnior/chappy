@@ -1,4 +1,5 @@
 import 'package:mobx/mobx.dart';
+import 'package:projects/models/firebase_model.dart';
 import 'package:projects/modules/chat/models/chat.dart';
 import 'package:projects/modules/chat/models/member.dart';
 import 'package:projects/modules/chat/repositories/chat_repository.dart';
@@ -46,7 +47,7 @@ abstract class ChatCreateControllerBase with Store {
   void setCategory(int v) => category = v;
 
   @action
-  Future<bool> createChat() async {
+  Future<SaveResult> createChat() async {
     isLoading = true;
 
     chat = Chat(
@@ -55,24 +56,24 @@ abstract class ChatCreateControllerBase with Store {
       category: category,
     );
 
-    final chatCreated = await chatRepository.createChat(chat);
+    SaveResult result = await chatRepository.createChat(chat);
 
-    enter();
+    result = await enter();
 
     isLoading = false;
 
-    return chatCreated;
+    return result;
   }
 
   @action
-  Future<void> enter() async {
+  Future<SaveResult> enter() async {
     member = Member(
       id: profile?.uuid,
       online: true,
       logoutAt: DateTime.now(),
     );
-    await chatRepository
-        .enter(member, chat.uuid);
+    final result = await chatRepository.enter(member, chat.uuid);
+    return result;
   }
 
   @computed

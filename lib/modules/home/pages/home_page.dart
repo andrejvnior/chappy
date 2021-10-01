@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 16),
-          const ChappyTitle(title: 'Chats'),
+          ChappyTitle(title: 'Welcome to chappy, ${controller.profile?.nickname}'),
           const SizedBox(height: 16),
           SizedBox(
             height: 36,

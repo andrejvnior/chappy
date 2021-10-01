@@ -6,15 +6,21 @@ class Profile extends FirebaseModel {
   String nickname;
   String bio;
   String gender;
-  DateTime? age;
+  DateTime birthday;
+  String city;
+  String country;
+  List<int> interests;
 
   Profile({
-    this.email = '',
-    this.name = '',
-    this.nickname = '',
-    this.bio = '',
-    this.gender = '',
-    this.age,
+    required this.email,
+    required this.name,
+    required this.nickname,
+    required this.bio,
+    required this.gender,
+    required this.birthday,
+    required this.city,
+    required this.country,
+    required this.interests,
     String uuid = '',
     DateTime? createdAt,
   }) : super(
@@ -28,8 +34,11 @@ class Profile extends FirebaseModel {
         nickname = map['nickname'] as String,
         bio = map['bio'] as String,
         gender = map['gender'] as String,
-        age = DateTime.fromMillisecondsSinceEpoch(
-            map['age'].millisecondsSinceEpoch),
+        birthday = DateTime.fromMillisecondsSinceEpoch(
+            map['birthday'].millisecondsSinceEpoch),
+        city = map['city'] as String,
+        country = map['country'] as String,
+        interests = map['interests'] as List<int>,
         super.fromMap(map);
 
   @override
@@ -41,7 +50,10 @@ class Profile extends FirebaseModel {
       'nickname': nickname,
       'bio': bio,
       'gender': gender,
-      'age': age,
+      'birthday': birthday,
+      'city': city,
+      'country': country,
+      'interests': interests,
       'createdAt': createdAt,
     };
   }

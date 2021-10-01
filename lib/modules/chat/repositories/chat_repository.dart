@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projects/models/firebase_model.dart';
 import 'package:projects/modules/chat/models/chat.dart';
 import 'package:projects/modules/chat/models/member.dart';
 import 'package:projects/modules/chat/models/message.dart';
@@ -7,12 +8,12 @@ class ChatRepository {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   final collection = FirebaseFirestore.instance.collection('chats');
 
-  Future<bool> createChat(Chat chat) {
+  Future<SaveResult> createChat(Chat chat) {
     return collection
         .doc(chat.uuid)
         .set(chat.toMap())
-        .then((value) => true)
-        .catchError((error) => false);
+        .then((value) => SaveResult.success)
+        .catchError((error) => SaveResult.failed);
   }
 
   Future<Chat> getChat(Chat chat) async {
@@ -22,41 +23,37 @@ class ChatRepository {
   }
 
   Stream<List<Chat>> chats() {
-    print('Getting chats...');
     return collection.snapshots().map(
         (query) => query.docs.map((doc) => Chat.fromMap(doc.data())).toList());
   }
 
-  Future<void> sendMessage(Message message, Chat chat) {
-
+  Future<SaveResult> sendMessage(Message message, Chat chat) {
     final messages = collection.doc(chat.uuid).collection('messages');
     return messages
         .doc(message.uuid)
         .set(message.toMap())
-        .then((value) => print('Message succesfully sent.'))
-        .catchError((error) => print('Error senting message.'));
+        .then((value) => SaveResult.success)
+        .catchError((error) => SaveResult.failed);
   }
 
   Stream<List<Message>> messages(Chat chat) {
-
     final messages = collection.doc(chat.uuid).collection('messages');
 
     return messages.snapshots().map((query) =>
         query.docs.map((doc) => Message.fromMap(doc.data())).toList());
   }
 
-  Future<void> enter(Member member, String uuid) {
-
+  Future<SaveResult> enter(Member member, String uuid) {
     final members = collection.doc(uuid).collection('members');
 
     return members
         .doc(member.uuid)
         .set(member.toMap())
-        .then((value) => print('Member succesfully created.'))
-        .catchError((error) => print('Error creating member.'));
+        .then((value) => SaveResult.success)
+        .catchError((error) => SaveResult.failed);
   }
 
-  Future<void> exit(Member member,Chat chat) {
+  Future<SaveResult> exit(Member member, Chat chat) {
     final members = collection.doc(chat.uuid).collection('members');
     return members
         .doc(member.uuid)
@@ -64,8 +61,8 @@ class ChatRepository {
           'online': false,
           'logoutAt': DateTime.now(),
         })
-        .then((value) => print("Member logged out"))
-        .catchError((error) => print("Failed to logout member: $error"));
+        .then((value) => SaveResult.success)
+        .catchError((error) => SaveResult.failed);
   }
 
   Stream<List<Member>> members(Chat chat) {

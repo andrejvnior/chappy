@@ -18,15 +18,12 @@ abstract class SplashControllerBase with Store {
 
   ProfileRepository profileRepository = ProfileRepository();
 
-  Profile profile = Profile();
-
   @computed
   bool get isLogged {
     return auth.currentUser != null;
   }
 
   @action
-  Future<void> getProfile() async {
-    profile = await profileRepository.getProfile(auth.currentUser?.email ?? '');
-  }
+  Future<Profile?> getProfile() async =>
+      await profileRepository.getProfile(auth.currentUser?.email ?? '');
 }

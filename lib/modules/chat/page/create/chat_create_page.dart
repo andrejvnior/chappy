@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:projects/models/firebase_model.dart';
 import 'package:projects/modules/chat/models/category.dart';
 import 'package:projects/modules/chat/page/create/chat_create_controller.dart';
 import 'package:projects/modules/chat/page/read/chat_page.dart';
@@ -82,17 +83,17 @@ class _ChatCreatePageState extends State<ChatCreatePage> {
                 ChappyButton(
                   onPressed: () async {
                     if (controller.isValid) {
-                      controller.createChat().then((isChatCreated) {
-                        if (isChatCreated) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChatPage(
-                                        chat: controller.chat,
-                                        profile: widget.profile,
-                                      )));
-                        }
-                      });
+                      final result = await controller.createChat();
+
+                      if (result == SaveResult.success) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatPage(
+                                      chat: controller.chat,
+                                      profile: widget.profile,
+                                    )));
+                      }
                     } else {
                       controller.setErrorMessage();
                     }

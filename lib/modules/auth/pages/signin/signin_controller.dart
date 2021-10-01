@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobx/mobx.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:projects/models/firebase_model.dart';
 import 'package:projects/modules/profile/models/profile.dart';
 import 'package:projects/modules/profile/repositories/profile_repository.dart';
 
@@ -15,7 +16,7 @@ abstract class SignInControllerBase with Store {
 
   ProfileRepository profileRepository = ProfileRepository();
 
-  Profile profile = Profile();
+  Profile? profile;
 
   @observable
   String errorMessage = '';
@@ -37,17 +38,17 @@ abstract class SignInControllerBase with Store {
   @action
   void setPassword(String v) => password = v;
 
-  Future<bool> signIn() async {
+  Future<SaveResult> signIn() async {
     isLoading = true;
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
+      UserCredential userCredential = await auth
           .signInWithEmailAndPassword(email: email, password: password);
 
       if (userCredential.user != null) {
         await getProfile();
-        return true;
+        return SaveResult.success;
       }
-      return false;
+      return SaveResult.failed;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         errorMessage = 'No user found for that email.';
@@ -55,7 +56,7 @@ abstract class SignInControllerBase with Store {
         errorMessage = 'Wrong password provided for that user.';
       }
     }
-    return false;
+    return SaveResult.failed;
   }
 
   @action

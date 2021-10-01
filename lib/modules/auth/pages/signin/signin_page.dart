@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:projects/models/firebase_model.dart';
 import 'package:projects/modules/auth/pages/signup/signup_page.dart';
 import 'package:projects/modules/home/pages/home_page.dart';
 import 'package:projects/widgets/chappy_button.dart';
@@ -15,7 +16,7 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final SignInController _controller = SignInController();
+  final SignInController controller = SignInController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,20 +28,20 @@ class _SignInPageState extends State<SignInPage> {
           children: [
             ChappyTextInput(
               hintText: 'Email',
-              onChanged: _controller.setEmail,
+              onChanged: controller.setEmail,
             ),
             const SizedBox(height: 16),
             ChappyTextInput(
               hintText: 'Password',
-              onChanged: _controller.setPassword,
+              onChanged: controller.setPassword,
               obscureText: true,
             ),
             Observer(
               builder: (_) {
-                if (_controller.errorMessage.isEmpty) return Container();
+                if (controller.errorMessage.isEmpty) return Container();
 
                 return Text(
-                  _controller.errorMessage,
+                  controller.errorMessage,
                   style: const TextStyle(
                     color: Colors.red,
                   ),
@@ -50,21 +51,21 @@ class _SignInPageState extends State<SignInPage> {
             const SizedBox(height: 16),
             ChappyButton(
               onPressed: () async {
-                if (_controller.isValid) {
-                  _controller.signIn().then((hasProfile) {
-                    if (hasProfile) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomePage(
-                            profile: _controller.profile,
-                          ),
+                if (controller.isValid) {
+                  final result = await controller.signIn();
+
+                  if (result == SaveResult.success) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(
+                          profile: controller.profile,
                         ),
-                      );
-                    }
-                  });
+                      ),
+                    );
+                  }
                 } else {
-                  _controller.setErrorMessage();
+                  controller.setErrorMessage();
                 }
               },
               title: 'Sign In',

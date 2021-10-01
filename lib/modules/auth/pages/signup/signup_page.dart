@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:projects/models/firebase_model.dart';
+import 'package:projects/modules/auth/pages/signin/signin_page.dart';
 import 'package:projects/modules/auth/pages/signup/signup_controller.dart';
-import 'package:projects/modules/home/pages/home_page.dart';
+import 'package:projects/modules/profile/pages/create/profile_create_page.dart';
 import 'package:projects/widgets/chappy_button.dart';
 import 'package:projects/widgets/chappy_text_input.dart';
 
@@ -27,7 +29,8 @@ class _SignUpPageState extends State<SignUpPage> {
           }
           return Container(
             padding: const EdgeInsets.all(16),
-            child: ListView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ChappyTextInput(
                   hintText: 'Email',
@@ -41,45 +44,34 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 const SizedBox(height: 16),
                 ChappyTextInput(
-                  hintText: 'Name',
-                  onChanged: controller.setName,
-                ),
-                const SizedBox(height: 16),
-                ChappyTextInput(
-                  hintText: 'Nickname',
-                  onChanged: controller.setNickname,
-                ),
-                const SizedBox(height: 16),
-                ChappyTextInput(
-                  hintText: 'Gender',
-                  onChanged: controller.setGender,
-                ),
-                const SizedBox(height: 16),
-                ChappyTextInput(
-                  hintText: 'Bio',
-                  onChanged: controller.setBio,
-                ),
-                const SizedBox(height: 16),
-                ChappyTextInput(
-                  hintText: controller.age.toString(),
-                  // onChanged: _controller.setAge,
+                  hintText: 'Confirm password',
+                  onChanged: controller.setConfirmPassword,
+                  obscureText: true,
                 ),
                 const SizedBox(height: 16),
                 ChappyButton(
                   onPressed: () async {
+                    print('Email complete: ${controller.email}');
+                    print('Password: ${controller.password}');
+                    print('Confirm Password: ${controller.confirmPassword}');
+                    print('Email: ${controller.email.isNotEmpty}');
+                    print('Valid: ${controller.isValid}');
+                    print('Valid E-mail: ${controller.emailValid}');
+                    print('Valid Password: ${controller.passwordValid}');
+                    print(
+                        'Valid Confirm Password: ${controller.confirmPasswordValid}');
                     if (controller.isValid) {
-                      controller.setLoading();
-                      controller.signUp().then((isProfileCreated) {
-                        if (isProfileCreated) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage(
-                                        profile: controller.profile,
-                                      )));
-                        }
-                      });
-                      controller.setLoading();
+                      final result = await controller.signUp();
+                      if (result == SaveResult.success) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfileCreatePage(
+                              email: controller.email,
+                            ),
+                          ),
+                        );
+                      }
                     } else {
                       controller.setErrorMessage();
                     }
@@ -98,6 +90,13 @@ class _SignUpPageState extends State<SignUpPage> {
                     );
                   },
                 ),
+                GestureDetector(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignInPage())),
+                  child: const Text('Already have an account? Sign In!'),
+                )
               ],
             ),
           );

@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:projects/modules/auth/pages/signin/signin_page.dart';
+import 'package:projects/modules/auth/pages/signup/signup_page.dart';
 import 'package:projects/modules/home/pages/home_page.dart';
+import 'package:projects/modules/profile/pages/create/profile_create_page.dart';
 import 'package:projects/themes/chappy_colors.dart';
 
 import 'splash_controller.dart';
@@ -14,7 +16,7 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  final SplashController _controller = SplashController();
+  final SplashController controller = SplashController();
 
   @override
   void initState() {
@@ -23,19 +25,36 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   navigateUser() async {
-    if (_controller.isLogged) {
-      await _controller.getProfile();
-      Timer(
-        const Duration(seconds: 3),
-        () => Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => HomePage(profile: _controller.profile)),
-            (Route<dynamic> route) => false),
-      );
+    if (controller.isLogged) {
+      print('Getting profile,,, splash');
+      final profile = await controller.getProfile();
+
+      print('Profile: $profile');
+
+      if (profile == null) {
+        print('Profile null: $profile');
+        Timer(
+          const Duration(seconds: 3),
+          () => Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) => ProfileCreatePage(
+                      email: controller.auth.currentUser?.email ?? '')),
+              (Route<dynamic> route) => false),
+        );
+      } else {
+        Timer(
+          const Duration(seconds: 3),
+          () => Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) => HomePage(profile: profile)),
+              (Route<dynamic> route) => false),
+        );
+      }
     } else {
       Timer(
           const Duration(seconds: 4),
-          () => Navigator.push(
-              context, MaterialPageRoute(builder: (context) => const SignInPage())));
+          () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const SignUpPage())));
     }
   }
 

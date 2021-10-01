@@ -43,8 +43,8 @@ abstract class ChatControllerBase with Store {
   @computed
   List<Profile> get profiles {
     if (observableStreamProfile == null) return <Profile>[];
-    List<Profile> list =
-        observableStreamProfile?.value?.toList() ?? <Profile>[];
+
+    final list = observableStreamProfile?.value?.toList() ?? <Profile>[];
 
     List<Profile> profiles = <Profile>[];
     if (members.isNotEmpty) {
@@ -64,6 +64,7 @@ abstract class ChatControllerBase with Store {
           profiles.where((profile) => profile.name.contains(replaced)).toList();
     }
 
+    print('Profiles: ${profiles.length}');
     return profiles;
   }
 
@@ -96,6 +97,8 @@ abstract class ChatControllerBase with Store {
     List<Member> list = observableStreamMember?.value?.toList() ?? <Member>[];
 
     list = list.where((member) => member.online).toList();
+
+    print('Members: ${list.length}');
 
     return list;
   }

@@ -1,9 +1,7 @@
 import 'package:mobx/mobx.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:projects/modules/profile/repositories/profile_repository.dart';
-
-import 'package:projects/modules/profile/models/profile.dart';
+import 'package:projects/core/extensions.dart';
+import 'package:projects/models/firebase_model.dart';
 
 part 'signup_controller.g.dart';
 
@@ -11,12 +9,6 @@ class SignUpController = SignUpControllerBase with _$SignUpController;
 
 abstract class SignUpControllerBase with Store {
   FirebaseAuth auth = FirebaseAuth.instance;
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
-
-  ProfileRepository profileRepository = ProfileRepository();
-
-  Profile profile = Profile();
 
   @observable
   String errorMessage = '';
@@ -37,20 +29,7 @@ abstract class SignUpControllerBase with Store {
   String password = '';
 
   @observable
-  String name = '';
-
-  @observable
-  String nickname = '';
-
-  @observable
-  String bio = '';
-
-  @observable
-  String gender = '';
-
-  // TODO: Implement age choice
-  @observable
-  DateTime age = DateTime.now().subtract(const Duration(days: 8665));
+  String confirmPassword = '';
 
   @action
   void setEmail(String v) => email = v;
@@ -59,36 +38,40 @@ abstract class SignUpControllerBase with Store {
   void setPassword(String v) => password = v;
 
   @action
-  void setName(String v) => name = v;
+  void setConfirmPassword(String v) => confirmPassword = v;
 
-  @action
-  void setNickname(String v) => nickname = v;
+  @computed
+  bool get emailValid => email.isNotEmpty && email.isEmail;
 
-  @action
-  void setBio(String v) => bio = v;
+  // String? get emailError {
+  //   if (emailValid) {
+  //     return null;
+  //   } else {
+  //     if (email.isEmpty) {
+  //       return 'E-mail should not be empty.';
+  //     } else if (!email.isEmail) {
+  //       return 'Please, insert a correct email.';
+  //     }
+  //   }
+  // }
 
-  @action
-  void setGender(String v) => gender = v;
+  @computed
+  bool get passwordValid => password.length > 6;
 
-  @action
-  void setAge(DateTime v) => age = v;
+  @computed
+  bool get confirmPasswordValid => confirmPassword == password;
 
-  Future<bool> signUp() async {
+  Future<SaveResult> signUp() async {
+    print('Signing up...');
     try {
+      print('Trying to sign up... $email');
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       if (userCredential.user != null) {
-        final isProfileCreated = await createProfile();
-
-        if (isProfileCreated) {
-          isLoading = false;
-          return true;
-        }
-
-        userCredential.user?.delete();
+        return SaveResult.success;
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -99,28 +82,10 @@ abstract class SignUpControllerBase with Store {
     } catch (e) {
       errorMessage = e.toString();
     }
-    return false;
-  }
-
-  Future<bool> createProfile() async {
-    profile = Profile(
-      email: email,
-      name: name,
-      nickname: nickname,
-      gender: gender,
-      bio: bio,
-      age: age,
-    );
-
-    final profileCreated = await profileRepository.createProfile(profile);
-    return profileCreated;
+    print('Sign up failed...');
+    return SaveResult.failed;
   }
 
   @computed
-  bool get isValid =>
-      email.isNotEmpty &&
-      password.isNotEmpty &&
-      name.isNotEmpty &&
-      nickname.isNotEmpty &&
-      gender.isNotEmpty;
+  bool get isValid => emailValid && passwordValid && confirmPasswordValid;
 }

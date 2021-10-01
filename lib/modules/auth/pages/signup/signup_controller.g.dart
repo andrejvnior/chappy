@@ -9,6 +9,27 @@ part of 'signup_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$SignUpController on SignUpControllerBase, Store {
+  Computed<bool>? _$emailValidComputed;
+
+  @override
+  bool get emailValid =>
+      (_$emailValidComputed ??= Computed<bool>(() => super.emailValid,
+              name: 'SignUpControllerBase.emailValid'))
+          .value;
+  Computed<bool>? _$passwordValidComputed;
+
+  @override
+  bool get passwordValid =>
+      (_$passwordValidComputed ??= Computed<bool>(() => super.passwordValid,
+              name: 'SignUpControllerBase.passwordValid'))
+          .value;
+  Computed<bool>? _$confirmPasswordValidComputed;
+
+  @override
+  bool get confirmPasswordValid => (_$confirmPasswordValidComputed ??=
+          Computed<bool>(() => super.confirmPasswordValid,
+              name: 'SignUpControllerBase.confirmPasswordValid'))
+      .value;
   Computed<bool>? _$isValidComputed;
 
   @override
@@ -76,78 +97,19 @@ mixin _$SignUpController on SignUpControllerBase, Store {
     });
   }
 
-  final _$nameAtom = Atom(name: 'SignUpControllerBase.name');
+  final _$confirmPasswordAtom =
+      Atom(name: 'SignUpControllerBase.confirmPassword');
 
   @override
-  String get name {
-    _$nameAtom.reportRead();
-    return super.name;
+  String get confirmPassword {
+    _$confirmPasswordAtom.reportRead();
+    return super.confirmPassword;
   }
 
   @override
-  set name(String value) {
-    _$nameAtom.reportWrite(value, super.name, () {
-      super.name = value;
-    });
-  }
-
-  final _$nicknameAtom = Atom(name: 'SignUpControllerBase.nickname');
-
-  @override
-  String get nickname {
-    _$nicknameAtom.reportRead();
-    return super.nickname;
-  }
-
-  @override
-  set nickname(String value) {
-    _$nicknameAtom.reportWrite(value, super.nickname, () {
-      super.nickname = value;
-    });
-  }
-
-  final _$bioAtom = Atom(name: 'SignUpControllerBase.bio');
-
-  @override
-  String get bio {
-    _$bioAtom.reportRead();
-    return super.bio;
-  }
-
-  @override
-  set bio(String value) {
-    _$bioAtom.reportWrite(value, super.bio, () {
-      super.bio = value;
-    });
-  }
-
-  final _$genderAtom = Atom(name: 'SignUpControllerBase.gender');
-
-  @override
-  String get gender {
-    _$genderAtom.reportRead();
-    return super.gender;
-  }
-
-  @override
-  set gender(String value) {
-    _$genderAtom.reportWrite(value, super.gender, () {
-      super.gender = value;
-    });
-  }
-
-  final _$ageAtom = Atom(name: 'SignUpControllerBase.age');
-
-  @override
-  DateTime get age {
-    _$ageAtom.reportRead();
-    return super.age;
-  }
-
-  @override
-  set age(DateTime value) {
-    _$ageAtom.reportWrite(value, super.age, () {
-      super.age = value;
+  set confirmPassword(String value) {
+    _$confirmPasswordAtom.reportWrite(value, super.confirmPassword, () {
+      super.confirmPassword = value;
     });
   }
 
@@ -199,55 +161,11 @@ mixin _$SignUpController on SignUpControllerBase, Store {
   }
 
   @override
-  void setName(String v) {
+  void setConfirmPassword(String v) {
     final _$actionInfo = _$SignUpControllerBaseActionController.startAction(
-        name: 'SignUpControllerBase.setName');
+        name: 'SignUpControllerBase.setConfirmPassword');
     try {
-      return super.setName(v);
-    } finally {
-      _$SignUpControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void setNickname(String v) {
-    final _$actionInfo = _$SignUpControllerBaseActionController.startAction(
-        name: 'SignUpControllerBase.setNickname');
-    try {
-      return super.setNickname(v);
-    } finally {
-      _$SignUpControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void setBio(String v) {
-    final _$actionInfo = _$SignUpControllerBaseActionController.startAction(
-        name: 'SignUpControllerBase.setBio');
-    try {
-      return super.setBio(v);
-    } finally {
-      _$SignUpControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void setGender(String v) {
-    final _$actionInfo = _$SignUpControllerBaseActionController.startAction(
-        name: 'SignUpControllerBase.setGender');
-    try {
-      return super.setGender(v);
-    } finally {
-      _$SignUpControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void setAge(DateTime v) {
-    final _$actionInfo = _$SignUpControllerBaseActionController.startAction(
-        name: 'SignUpControllerBase.setAge');
-    try {
-      return super.setAge(v);
+      return super.setConfirmPassword(v);
     } finally {
       _$SignUpControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -260,11 +178,10 @@ errorMessage: ${errorMessage},
 isLoading: ${isLoading},
 email: ${email},
 password: ${password},
-name: ${name},
-nickname: ${nickname},
-bio: ${bio},
-gender: ${gender},
-age: ${age},
+confirmPassword: ${confirmPassword},
+emailValid: ${emailValid},
+passwordValid: ${passwordValid},
+confirmPasswordValid: ${confirmPasswordValid},
 isValid: ${isValid}
     ''';
   }

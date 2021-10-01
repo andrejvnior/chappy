@@ -32,7 +32,7 @@ class _ChatPageState extends State<ChatPage> {
     controller = ChatController(widget.chat, widget.profile);
     super.initState();
   }
-
+  String dropdownValue = 'One';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -152,6 +152,7 @@ class _ChatPageState extends State<ChatPage> {
         drawer: Drawer(
           child: Observer(builder: (_) {
             final list = controller.profiles;
+
             if (list.isEmpty) {
               return const Center(
                 child: CircularProgressIndicator(),

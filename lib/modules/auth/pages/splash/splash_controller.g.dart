@@ -21,7 +21,7 @@ mixin _$SplashController on SplashControllerBase, Store {
       AsyncAction('SplashControllerBase.getProfile');
 
   @override
-  Future<void> getProfile() {
+  Future<Profile?> getProfile() {
     return _$getProfileAsyncAction.run(() => super.getProfile());
   }
 

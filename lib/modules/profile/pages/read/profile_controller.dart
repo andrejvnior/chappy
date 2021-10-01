@@ -14,6 +14,7 @@ abstract class ProfileControllerBase with Store {
     print('Getting followers from ${(other ?? owner)?.uuid}!');
     observableStreamFollowers =
         profileRepository.followers(other ?? owner!).asObservable();
+    observableFutureProfile = profileRepository.getProfiles().asObservable();
 
     profile = other ?? owner;
   }
@@ -27,14 +28,36 @@ abstract class ProfileControllerBase with Store {
   ProfileRepository profileRepository = ProfileRepository();
 
   ObservableStream<List<Follow>>? observableStreamFollowers;
+  ObservableFuture<List<Profile>>? observableFutureProfile;
+
+
+  @computed
+  List<Profile> get profiles {
+    if (observableFutureProfile == null) return <Profile>[];
+
+    final list = observableFutureProfile?.value?.toList() ?? <Profile>[];
+
+    List<Profile> profiles = <Profile>[];
+
+    // TODO: Error here
+    if (followers.isNotEmpty) {
+      for (final follower in followers) {
+        final profile =
+            list.where((element) => element.uuid == follower.uuid).first;
+
+        profiles.add(profile);
+      }
+    }
+
+    return profiles;
+  }
 
   @computed
   List<Follow> get followers {
-    print('Getting followers from ${(other ?? owner)?.uuid}!');
     if (observableStreamFollowers == null) return <Follow>[];
 
-    print('Successfullly got followers from ${(other ?? owner)?.uuid}!');
-    return observableStreamFollowers?.value?.toList() ?? <Follow>[];
+    final list = observableStreamFollowers?.value?.toList() ?? <Follow>[];
+    return list;
   }
 
   @action

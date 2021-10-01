@@ -34,8 +34,6 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
   }
 
-  String dropdownValue = 'One';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,10 +183,6 @@ class _ChatPageState extends State<ChatPage> {
                               ),
                             );
                           },
-                          leading: Image.network(
-                            'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png',
-                            width: 36,
-                          ),
                           title: Text(list[index].name),
                           trailing: Icon(
                             Icons.arrow_forward_ios_outlined,

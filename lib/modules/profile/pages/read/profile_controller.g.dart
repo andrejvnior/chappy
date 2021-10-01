@@ -16,6 +16,13 @@ mixin _$ProfileController on ProfileControllerBase, Store {
       (_$followersComputed ??= Computed<List<Follow>>(() => super.followers,
               name: 'ProfileControllerBase.followers'))
           .value;
+  Computed<List<Profile>>? _$profilesComputed;
+
+  @override
+  List<Profile> get profiles =>
+      (_$profilesComputed ??= Computed<List<Profile>>(() => super.profiles,
+              name: 'ProfileControllerBase.profiles'))
+          .value;
   Computed<bool>? _$isOtherComputed;
 
   @override
@@ -48,6 +55,7 @@ mixin _$ProfileController on ProfileControllerBase, Store {
   String toString() {
     return '''
 followers: ${followers},
+profiles: ${profiles},
 isOther: ${isOther},
 isFollowing: ${isFollowing}
     ''';

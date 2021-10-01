@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projects/widgets/chappy_avatar.dart';
 
 class ChappyListTile extends StatelessWidget {
   final Widget? leading;
@@ -24,7 +25,7 @@ class ChappyListTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           children: [
-            leading ?? Container(),
+            leading ?? ChappyAvatar(),
             const SizedBox(width: 8),
             Expanded(
               child: Column(

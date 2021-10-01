@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:projects/modules/profile/models/profile.dart';
+import 'package:projects/modules/profile/pages/read/followers/followers_page.dart';
 import 'package:projects/modules/profile/pages/read/profile_controller.dart';
 import 'package:projects/widgets/chappy_avatar.dart';
 
@@ -57,7 +58,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                         const SizedBox(width: 16),
-                        Container(
+                        GestureDetector(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FollowersPage(
+                                    profile: controller.profile!)),
+                          ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

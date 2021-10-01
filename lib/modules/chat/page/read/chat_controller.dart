@@ -16,7 +16,7 @@ abstract class ChatControllerBase with Store {
       observableStreamMessage = chatRepository.messages(chat!).asObservable();
       observableStreamMember = chatRepository.members(chat!).asObservable();
     }
-    observableStreamProfile = profileRepository.getProfiles().asObservable();
+    observableFutureProfile = profileRepository.getProfiles().asObservable();
   }
 
   Chat? chat;
@@ -38,13 +38,13 @@ abstract class ChatControllerBase with Store {
   ObservableStream<List<Message>>? observableStreamMessage;
   ObservableStream<List<Member>>? observableStreamMember;
 
-  ObservableFuture<List<Profile>>? observableStreamProfile;
+  ObservableFuture<List<Profile>>? observableFutureProfile;
 
   @computed
   List<Profile> get profiles {
-    if (observableStreamProfile == null) return <Profile>[];
+    if (observableFutureProfile == null) return <Profile>[];
 
-    final list = observableStreamProfile?.value?.toList() ?? <Profile>[];
+    final list = observableFutureProfile?.value?.toList() ?? <Profile>[];
 
     List<Profile> profiles = <Profile>[];
     if (members.isNotEmpty) {

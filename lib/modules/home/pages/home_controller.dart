@@ -61,7 +61,7 @@ abstract class HomeControllerBase with Store {
       online: true,
       logoutAt: DateTime.now(),
     );
-    await chatRepository.enter(member, chat.uuid);
+    await chatRepository.enter(member, chat);
   }
 
   @action

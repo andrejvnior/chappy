@@ -43,8 +43,8 @@ class ChatRepository {
         query.docs.map((doc) => Message.fromMap(doc.data())).toList());
   }
 
-  Future<SaveResult> enter(Member member, String uuid) {
-    final members = collection.doc(uuid).collection('members');
+  Future<SaveResult> enter(Member member, Chat chat) {
+    final members = collection.doc(chat.uuid).collection('members');
 
     return members
         .doc(member.uuid)

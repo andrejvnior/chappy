@@ -18,24 +18,27 @@ class ChappyListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          leading ?? Container(),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                title,
-                subtitle ?? Container(),
-              ],
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          children: [
+            leading ?? Container(),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  title,
+                  subtitle ?? Container(),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: 8),
-          trailing ?? Container(),
-        ],
+            const SizedBox(width: 8),
+            trailing ?? Container(),
+          ],
+        ),
       ),
     );
   }

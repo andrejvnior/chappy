@@ -72,7 +72,7 @@ abstract class ChatCreateControllerBase with Store {
       online: true,
       logoutAt: DateTime.now(),
     );
-    final result = await chatRepository.enter(member, chat.uuid);
+    final result = await chatRepository.enter(member, chat);
     return result;
   }
 

@@ -7,7 +7,9 @@ import 'package:projects/modules/home/pages/widgets/chat_item.dart';
 import 'package:projects/modules/interests/models/interest.dart';
 import 'package:projects/modules/interests/pages/interest_page.dart';
 import 'package:projects/modules/profile/models/profile.dart';
+import 'package:projects/modules/profile/pages/read/profile_page.dart';
 import 'package:projects/themes/chappy_colors.dart';
+import 'package:projects/widgets/chappy_avatar.dart';
 import 'package:projects/widgets/chappy_title.dart';
 
 import 'home_controller.dart';
@@ -78,8 +80,14 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 16),
-          ChappyTitle(
-              title: 'Welcome to chappy, ${controller.profile?.nickname}'),
+          ChappyAvatar(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfilePage(profile: controller.profile!),
+              ),
+            ),
+          ),
           const SizedBox(height: 16),
           TextButton(
             onPressed: () => Navigator.push(

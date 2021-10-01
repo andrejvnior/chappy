@@ -5,6 +5,7 @@ import 'package:projects/modules/chat/page/create/chat_create_page.dart';
 import 'package:projects/modules/chat/page/read/widgets/message_item.dart';
 import 'package:projects/modules/home/pages/home_page.dart';
 import 'package:projects/modules/profile/models/profile.dart';
+import 'package:projects/modules/profile/pages/read/profile_page.dart';
 import 'package:projects/themes/chappy_colors.dart';
 import 'package:projects/widgets/chappy_button.dart';
 import 'package:projects/widgets/chappy_list_tile.dart';
@@ -32,7 +33,9 @@ class _ChatPageState extends State<ChatPage> {
     controller = ChatController(widget.chat, widget.profile);
     super.initState();
   }
+
   String dropdownValue = 'One';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,6 +175,16 @@ class _ChatPageState extends State<ChatPage> {
                       itemBuilder: (BuildContext context, int index) {
                         // TODO: Substitute image
                         return ChappyListTile(
+                          onPressed: (){
+                            print('ddsfdsffdsdsf');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ProfilePage(
+                                    profile: widget.profile!, other: list[index]),
+                              ),
+                            );
+                          },
                           leading: Image.network(
                             'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png',
                             width: 36,

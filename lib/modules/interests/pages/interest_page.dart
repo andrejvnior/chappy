@@ -10,8 +10,11 @@ import 'package:projects/widgets/chappy_title.dart';
 
 class InterestPage extends StatefulWidget {
   final Profile profile;
+  final List<int>? interests;
 
-  const InterestPage({Key? key, required this.profile}) : super(key: key);
+  const InterestPage(
+      {Key? key, required this.profile, this.interests = const <int>[]})
+      : super(key: key);
 
   @override
   State<InterestPage> createState() => _InterestPageState();
@@ -23,6 +26,9 @@ class _InterestPageState extends State<InterestPage> {
   @override
   void initState() {
     controller = InterestController(widget.profile);
+    for (final interest in widget.interests!) {
+      controller.toggleInterest(interest);
+    }
     super.initState();
   }
 
@@ -37,7 +43,7 @@ class _InterestPageState extends State<InterestPage> {
               if (controller.isValid) {
                 final result = await controller.updateProfileInterests();
                 if (result == SaveResult.success) {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => HomePage(
@@ -50,7 +56,7 @@ class _InterestPageState extends State<InterestPage> {
                 controller.setErrorMessage();
               }
             },
-            child: Text(
+            child: const Text(
               'Salvar',
               style: TextStyle(color: Colors.white),
             ),
@@ -78,15 +84,15 @@ class _InterestPageState extends State<InterestPage> {
                   mainAxisSpacing: 16,
                 ),
                 itemBuilder: (BuildContext context, int index) {
-                  return Observer(
-                    builder: (_) => ChappyGridItem(
+                  return Observer(builder: (_) {
+                    return ChappyGridItem(
                       title: interestList[index].title ?? '',
                       onPressed: () =>
                           controller.toggleInterest(interestList[index].id!),
                       isSelected: controller.interests!
                           .contains(interestList[index].id),
-                    ),
-                  );
+                    );
+                  });
                 }),
           ),
         ],

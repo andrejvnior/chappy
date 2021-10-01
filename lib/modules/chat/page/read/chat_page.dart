@@ -59,7 +59,7 @@ class _ChatPageState extends State<ChatPage> {
                       final list = controller.messages;
                       if (list.isEmpty) {
                         return const Center(
-                          child: CircularProgressIndicator(),
+                          child: Text('No messages yet.'),
                         );
                       }
                       return ListView.builder(

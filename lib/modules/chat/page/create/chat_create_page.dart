@@ -4,6 +4,7 @@ import 'package:projects/models/firebase_model.dart';
 import 'package:projects/modules/chat/models/category.dart';
 import 'package:projects/modules/chat/page/create/chat_create_controller.dart';
 import 'package:projects/modules/chat/page/read/chat_page.dart';
+import 'package:projects/modules/interests/models/interest.dart';
 import 'package:projects/modules/profile/models/profile.dart';
 import 'package:projects/themes/chappy_colors.dart';
 import 'package:projects/widgets/chappy_button.dart';
@@ -56,23 +57,21 @@ class _ChatCreatePageState extends State<ChatCreatePage> {
                 SizedBox(
                   height: 100,
                   child: ListView.builder(
-                    itemCount: categoryList.length,
+                    itemCount: interestList.length - 1,
                     itemBuilder: (BuildContext context, int index) {
-                      if (index == 0) return Container();
-
                       return Observer(
                         builder: (_) => GestureDetector(
                           onTap: () =>
-                              controller.setCategory(categoryList[index].id),
+                              controller.setCategory(interestList[index].id!),
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               color:
-                                  categoryList[index].id == controller.category
+                              interestList[index].id == controller.category
                                       ? ChappyColors.primaryColor
                                       : Colors.grey.shade400,
                             ),
-                            child: Text(categoryList[index].title),
+                            child: Text(interestList[index].title ?? ''),
                           ),
                         ),
                       );

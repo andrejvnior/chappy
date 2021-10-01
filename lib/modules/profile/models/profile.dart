@@ -38,7 +38,7 @@ class Profile extends FirebaseModel {
             map['birthday'].millisecondsSinceEpoch),
         city = map['city'] as String,
         country = map['country'] as String,
-        interests = map['interests'] as List<int>,
+        interests = map['interests'].cast<int>(),
         super.fromMap(map);
 
   @override

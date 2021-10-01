@@ -4,6 +4,8 @@ import 'package:projects/modules/auth/pages/signin/signin_page.dart';
 import 'package:projects/modules/chat/models/category.dart';
 import 'package:projects/modules/chat/page/read/chat_page.dart';
 import 'package:projects/modules/home/pages/widgets/chat_item.dart';
+import 'package:projects/modules/interests/models/interest.dart';
+import 'package:projects/modules/interests/pages/interest_page.dart';
 import 'package:projects/modules/profile/models/profile.dart';
 import 'package:projects/themes/chappy_colors.dart';
 import 'package:projects/widgets/chappy_title.dart';
@@ -25,6 +27,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     controller = HomeController(widget.profile);
+    print('Interesses: ${controller.interests}');
     super.initState();
   }
 
@@ -61,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ChatPage(
-                      profile: widget.profile,
+                      profile: controller.profile,
                     ),
                   ),
                 );
@@ -75,32 +78,54 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 16),
-          ChappyTitle(title: 'Welcome to chappy, ${controller.profile?.nickname}'),
+          ChappyTitle(
+              title: 'Welcome to chappy, ${controller.profile?.nickname}'),
           const SizedBox(height: 16),
-          SizedBox(
-            height: 36,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: categoryList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Observer(
-                  builder: (_) => GestureDetector(
-                    onTap: () => controller.setCategory(categoryList[index].id),
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 8),
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: categoryList[index].id == controller.category
-                            ? ChappyColors.primaryColor
-                            : Colors.grey.shade400,
-                      ),
-                      child: Text(categoryList[index].title),
-                    ),
+          TextButton(
+            onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => InterestPage(
+                    profile: controller.profile!,
+                    interests: controller.profile?.interests,
                   ),
-                );
-              },
-            ),
+                )),
+            child: Text('Add interest'),
           ),
+          SizedBox(
+              height: 36,
+              child: Observer(
+                builder: (_) {
+                  if (controller.interests.isEmpty) return Container();
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.interests.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final title = interestList
+                          .firstWhere((interest) =>
+                              interest.id == controller.interests[index])
+                          .title;
+                      return Observer(
+                        builder: (_) => GestureDetector(
+                          onTap: () => controller
+                              .setInterest(controller.interests[index]),
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 8),
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: controller.interests[index] ==
+                                      controller.interest
+                                  ? ChappyColors.primaryColor
+                                  : Colors.grey.shade400,
+                            ),
+                            child: Text(title ?? ''),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              )),
           const SizedBox(height: 16),
           const ChappyTitle(title: 'Chats'),
           const SizedBox(height: 16),
@@ -126,13 +151,13 @@ class _HomePageState extends State<HomePage> {
                                     MaterialPageRoute(
                                       builder: (context) => ChatPage(
                                         chat: list[index],
-                                        profile: widget.profile,
+                                        profile: controller.profile,
                                       ),
                                     ),
                                   ));
                         },
                         chat: list[index],
-                        profile: widget.profile);
+                        profile: controller.profile);
                   });
             }),
           ),

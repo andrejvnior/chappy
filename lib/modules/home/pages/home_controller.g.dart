@@ -17,19 +17,26 @@ mixin _$HomeController on HomeControllerBase, Store {
               name: 'HomeControllerBase.chats'))
           .value;
 
-  final _$categoryAtom = Atom(name: 'HomeControllerBase.category');
+  final _$interestAtom = Atom(name: 'HomeControllerBase.interest');
 
   @override
-  int get category {
-    _$categoryAtom.reportRead();
-    return super.category;
+  int get interest {
+    _$interestAtom.reportRead();
+    return super.interest;
   }
 
   @override
-  set category(int value) {
-    _$categoryAtom.reportWrite(value, super.category, () {
-      super.category = value;
+  set interest(int value) {
+    _$interestAtom.reportWrite(value, super.interest, () {
+      super.interest = value;
     });
+  }
+
+  final _$getProfileAsyncAction = AsyncAction('HomeControllerBase.getProfile');
+
+  @override
+  Future<void> getProfile() {
+    return _$getProfileAsyncAction.run(() => super.getProfile());
   }
 
   final _$createMemberAsyncAction =
@@ -51,11 +58,11 @@ mixin _$HomeController on HomeControllerBase, Store {
       ActionController(name: 'HomeControllerBase');
 
   @override
-  void setCategory(int v) {
+  void setInterest(int v) {
     final _$actionInfo = _$HomeControllerBaseActionController.startAction(
-        name: 'HomeControllerBase.setCategory');
+        name: 'HomeControllerBase.setInterest');
     try {
-      return super.setCategory(v);
+      return super.setInterest(v);
     } finally {
       _$HomeControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -64,7 +71,7 @@ mixin _$HomeController on HomeControllerBase, Store {
   @override
   String toString() {
     return '''
-category: ${category},
+interest: ${interest},
 chats: ${chats}
     ''';
   }

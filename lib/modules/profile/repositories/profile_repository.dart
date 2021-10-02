@@ -14,13 +14,21 @@ class ProfileRepository {
         .catchError((error) => SaveResult.failed);
   }
 
+  Future<SaveResult> updateProfile(Profile profile) {
+    return collection
+        .doc(profile.uuid)
+        .update(profile.toMap())
+        .then((value) => SaveResult.success)
+        .catchError((error) {
+      return SaveResult.failed;
+    });
+  }
+
   Future<Profile?> getProfile(String email) async {
-    print('Getting profile,,, repo $email');
     final userProfile = await collection.where('email', isEqualTo: email).get();
 
     if (userProfile.docs.isEmpty) return null;
 
-    print('Getting profile,,, splash');
     return Profile.fromMap(userProfile.docs.first.data());
   }
 
@@ -31,7 +39,6 @@ class ProfileRepository {
   }
 
   Stream<List<Follow>> followers(Profile profile) {
-    print('Getting followers in Repository from ${profile.uuid}!');
     final followersCollection =
         collection.doc(profile.uuid).collection('followers');
 
@@ -40,7 +47,6 @@ class ProfileRepository {
   }
 
   Stream<List<Follow>> following(Profile profile) {
-    print('Getting following in Repository from ${profile.uuid}!');
     final followingCollection =
         collection.doc(profile.uuid).collection('following');
 
@@ -98,5 +104,15 @@ class ProfileRepository {
     }
 
     return result;
+  }
+
+  Future<bool> verifyNickname(String nickname) async {
+    final nicknameExists =
+        await collection.where('nickname', isEqualTo: nickname).get();
+
+    if (nicknameExists.docs.isEmpty) {
+      return true;
+    }
+    return false;
   }
 }

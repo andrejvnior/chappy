@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobx/mobx.dart';
 import 'package:projects/models/firebase_model.dart';
-import 'package:projects/modules/interests/models/interest.dart';
 import 'package:projects/modules/interests/repositories/interests_repository.dart';
 import 'package:projects/modules/profile/models/profile.dart';
-import 'package:projects/modules/profile/repositories/profile_repository.dart';
 
 part 'interest_controller.g.dart';
 
@@ -36,7 +34,6 @@ abstract class InterestControllerBase with Store {
     } else {
       interests?.add(i);
     }
-    print('Interest number: ${interests?.length}');
   }
 
   @computed

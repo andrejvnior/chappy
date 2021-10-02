@@ -64,7 +64,6 @@ abstract class ChatControllerBase with Store {
           profiles.where((profile) => profile.name.contains(replaced)).toList();
     }
 
-    print('Profiles: ${profiles.length}');
     return profiles;
   }
 
@@ -97,8 +96,6 @@ abstract class ChatControllerBase with Store {
     List<Member> list = observableStreamMember?.value?.toList() ?? <Member>[];
 
     list = list.where((member) => member.online).toList();
-
-    print('Members: ${list.length}');
 
     return list;
   }

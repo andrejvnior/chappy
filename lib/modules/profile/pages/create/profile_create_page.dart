@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:projects/models/firebase_model.dart';
-import 'package:projects/modules/home/pages/home_page.dart';
 import 'package:projects/modules/interests/pages/interest_page.dart';
 import 'package:projects/modules/profile/models/gender.dart';
 import 'package:projects/modules/profile/pages/create/profile_create_controller.dart';

@@ -25,7 +25,7 @@ class ChappyListTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           children: [
-            leading ?? ChappyAvatar(),
+            leading ?? const ChappyAvatar(),
             const SizedBox(width: 8),
             Expanded(
               child: Column(

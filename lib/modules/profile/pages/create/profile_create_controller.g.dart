@@ -186,6 +186,21 @@ mixin _$ProfileCreateController on ProfileCreateControllerBase, Store {
     });
   }
 
+  final _$bioAtom = Atom(name: 'ProfileCreateControllerBase.bio');
+
+  @override
+  String get bio {
+    _$bioAtom.reportRead();
+    return super.bio;
+  }
+
+  @override
+  set bio(String value) {
+    _$bioAtom.reportWrite(value, super.bio, () {
+      super.bio = value;
+    });
+  }
+
   final _$birthdayAtom = Atom(name: 'ProfileCreateControllerBase.birthday');
 
   @override
@@ -327,6 +342,17 @@ mixin _$ProfileCreateController on ProfileCreateControllerBase, Store {
   }
 
   @override
+  void setBio(String v) {
+    final _$actionInfo = _$ProfileCreateControllerBaseActionController
+        .startAction(name: 'ProfileCreateControllerBase.setBio');
+    try {
+      return super.setBio(v);
+    } finally {
+      _$ProfileCreateControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setGender(Gender v) {
     final _$actionInfo = _$ProfileCreateControllerBaseActionController
         .startAction(name: 'ProfileCreateControllerBase.setGender');
@@ -380,6 +406,7 @@ password: ${password},
 confirmPassword: ${confirmPassword},
 name: ${name},
 nickname: ${nickname},
+bio: ${bio},
 birthday: ${birthday},
 gender: ${gender},
 city: ${city},

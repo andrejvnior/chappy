@@ -27,7 +27,7 @@ class _FollowersPageState extends State<FollowersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Followers'),
+        title: const Text('Followers'),
       ),
       body: Observer(builder: (_) {
         final list = controller.profiles;

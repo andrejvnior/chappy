@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:projects/modules/auth/pages/signin/signin_page.dart';
 import 'package:projects/modules/auth/pages/signup/signup_page.dart';
 import 'package:projects/modules/home/pages/home_page.dart';
 import 'package:projects/modules/profile/pages/create/profile_create_page.dart';
@@ -26,13 +25,9 @@ class _SplashPageState extends State<SplashPage> {
 
   navigateUser() async {
     if (controller.isLogged) {
-      print('Getting profile,,, splash');
       final profile = await controller.getProfile();
 
-      print('Profile: $profile');
-
       if (profile == null) {
-        print('Profile null: $profile');
         Timer(
           const Duration(seconds: 3),
           () => Navigator.of(context).pushAndRemoveUntil(

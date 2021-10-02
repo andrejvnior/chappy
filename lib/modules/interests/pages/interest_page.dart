@@ -63,8 +63,7 @@ class _InterestPageState extends State<InterestPage> {
           )
         ],
       ),
-      body: Container(
-          child: Column(
+      body: Column(
         children: [
           Observer(
             builder: (_) {
@@ -96,7 +95,7 @@ class _InterestPageState extends State<InterestPage> {
                 }),
           ),
         ],
-      )),
+      ),
     );
   }
 }

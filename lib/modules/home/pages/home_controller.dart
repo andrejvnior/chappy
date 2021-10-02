@@ -43,7 +43,6 @@ abstract class HomeControllerBase with Store {
   @action
   Future<void> getProfile() async {
     profile = await profileRepository.getProfile(profile!.email);
-    print('Profile: ${profile?.interests}');
   }
   @action
   buildInterests() {

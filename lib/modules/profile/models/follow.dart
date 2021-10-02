@@ -1,5 +1,3 @@
-import 'package:projects/models/firebase_model.dart';
-
 class Follow {
   String uuid;
   DateTime? createdAt;

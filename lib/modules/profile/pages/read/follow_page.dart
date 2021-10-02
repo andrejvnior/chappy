@@ -26,7 +26,6 @@ class _FollowPageState extends State<FollowPage> {
 
   @override
   void initState() {
-    print('Follows no init: ${widget.follows}');
     controller = ProfileController(widget.profile, follows: widget.follows);
     super.initState();
   }

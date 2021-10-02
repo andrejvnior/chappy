@@ -174,7 +174,6 @@ class _ChatPageState extends State<ChatPage> {
                         // TODO: Substitute image
                         return ChappyListTile(
                           onPressed: (){
-                            print('ddsfdsffdsdsf');
                             Navigator.push(
                               context,
                               MaterialPageRoute(

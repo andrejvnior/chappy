@@ -62,9 +62,7 @@ abstract class SignUpControllerBase with Store {
   bool get confirmPasswordValid => confirmPassword == password;
 
   Future<SaveResult> signUp() async {
-    print('Signing up...');
     try {
-      print('Trying to sign up... $email');
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -82,7 +80,6 @@ abstract class SignUpControllerBase with Store {
     } catch (e) {
       errorMessage = e.toString();
     }
-    print('Sign up failed...');
     return SaveResult.failed;
   }
 

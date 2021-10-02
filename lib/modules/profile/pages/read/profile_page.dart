@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:projects/modules/profile/models/profile.dart';
+import 'package:projects/modules/profile/pages/create/profile_edit_page.dart';
 import 'package:projects/modules/profile/pages/read/follow_page.dart';
-import 'package:projects/modules/profile/pages/read/followers/followers_page.dart';
 import 'package:projects/modules/profile/pages/read/profile_controller.dart';
 import 'package:projects/widgets/chappy_avatar.dart';
 
@@ -34,88 +34,98 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: Text('@${controller.profile!.nickname}'),
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Container(
-                height: 100,
-                color: Colors.blue,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ChappyAvatar(),
-                        const SizedBox(width: 16),
-                        const SizedBox(width: 16),
-                        GestureDetector(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FollowPage(
-                                follows: controller.followers,
-                                profile: widget.profile,
-                              ),
+      body: Column(
+        children: [
+          Container(
+              height: 100,
+              color: Colors.blue,
+              child: Column(
+                children: [
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                     const  ChappyAvatar(),
+                      const SizedBox(width: 16),
+                      const SizedBox(width: 16),
+                      GestureDetector(
+                        // TODO: GET RESULT AND DO EFFECT
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FollowPage(
+                              follows: controller.followers,
+                              profile: widget.profile,
                             ),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Observer(
-                                builder: (_) => Text(
-                                    controller.followers.length.toString()),
-                              ),
-                              Text('followers'),
-                            ],
-                          ),
                         ),
-                        const SizedBox(width: 16),
-                        GestureDetector(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FollowPage(
-                                follows: controller.following,
-                                profile: widget.profile,
-                              ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Observer(
+                              builder: (_) => Text(
+                                  controller.followers.length.toString()),
+                            ),
+                            const Text('followers'),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      GestureDetector(
+                        // TODO: GET RESULT AND DO EFFECT
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FollowPage(
+                              follows: controller.following,
+                              profile: widget.profile,
                             ),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Observer(
-                                builder: (_) => Text(
-                                    controller.following.length.toString()),
-                              ),
-                              Text('following'),
-                            ],
-                          ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Container(
-                      child: Text(controller.profile!.bio.isNotEmpty
-                          ? controller.profile!.bio
-                          : 'Hello, my name is ${controller.profile!.name}.'),
-                    ),
-                  ],
-                )),
-            if (controller.isOther)
-              Observer(
-                builder: (_) => TextButton(
-                  onPressed: () => controller.isFollowing
-                      ? controller.unfollow()
-                      : controller.follow(),
-                  child: Text(controller.isFollowing ? 'Unfollow' : 'Follow'),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Observer(
+                              builder: (_) => Text(
+                                  controller.following.length.toString()),
+                            ),
+                            const Text('following'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(controller.profile!.bio.isNotEmpty
+                      ? controller.profile!.bio
+                      : 'Hello, my name is ${controller.profile!.name}.'),
+                ],
+              )),
+          if (controller.isOther) ...[
+            Observer(
+              builder: (_) => TextButton(
+                onPressed: () => controller.isFollowing
+                    ? controller.unfollow()
+                    : controller.follow(),
+                child: Text(controller.isFollowing ? 'Unfollow' : 'Follow'),
+              ),
+            ),
+          ] else ...[
+            TextButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ProfileEditPage(profile: widget.profile),
                 ),
               ),
-            Expanded(
-              child: Text('Feed'),
+              child: const Text('Edit Profile'),
             ),
           ],
-        ),
+          const Expanded(
+            child: Text('Feed'),
+          ),
+        ],
       ),
     );
   }

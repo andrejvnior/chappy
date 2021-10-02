@@ -51,15 +51,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(height: 16),
                 ChappyButton(
                   onPressed: () async {
-                    print('Email complete: ${controller.email}');
-                    print('Password: ${controller.password}');
-                    print('Confirm Password: ${controller.confirmPassword}');
-                    print('Email: ${controller.email.isNotEmpty}');
-                    print('Valid: ${controller.isValid}');
-                    print('Valid E-mail: ${controller.emailValid}');
-                    print('Valid Password: ${controller.passwordValid}');
-                    print(
-                        'Valid Confirm Password: ${controller.confirmPasswordValid}');
                     if (controller.isValid) {
                       final result = await controller.signUp();
                       if (result == SaveResult.success) {

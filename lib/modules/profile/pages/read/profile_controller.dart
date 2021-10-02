@@ -12,7 +12,6 @@ class ProfileController = ProfileControllerBase with _$ProfileController;
 abstract class ProfileControllerBase with Store {
   ProfileControllerBase(this.owner,
       {this.other, this.follows = const <Follow>[]}) {
-    print('Getting followers from ${(other ?? owner)?.uuid}!');
     observableStreamFollowers =
         profileRepository.followers(other ?? owner!).asObservable();
     observableStreamFollowing =

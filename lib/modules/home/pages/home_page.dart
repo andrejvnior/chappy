@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:projects/modules/auth/pages/signin/signin_page.dart';
-import 'package:projects/modules/chat/models/category.dart';
 import 'package:projects/modules/chat/page/read/chat_page.dart';
 import 'package:projects/modules/home/pages/widgets/chat_item.dart';
 import 'package:projects/modules/interests/models/interest.dart';
@@ -29,7 +28,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     controller = HomeController(widget.profile);
-    print('Interesses: ${controller.interests}');
     super.initState();
   }
 
@@ -98,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                     interests: controller.profile?.interests,
                   ),
                 )),
-            child: Text('Add interest'),
+            child: const Text('Add interest'),
           ),
           SizedBox(
               height: 36,

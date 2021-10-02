@@ -15,18 +15,22 @@ class ProfileCreateController = ProfileCreateControllerBase
     with _$ProfileCreateController;
 
 abstract class ProfileCreateControllerBase with Store {
-  ProfileCreateControllerBase(this.email);
+  ProfileCreateControllerBase(this.email, {this.profile});
+
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   ProfileRepository profileRepository = ProfileRepository();
 
+  Profile? originalProfile;
   Profile? profile;
 
   @observable
   String errorMessage = '';
 
   @action
-  setErrorMessage() => errorMessage = 'Please, insert mandatory fields.';
+  setErrorMessage() => errorMessage.isNotEmpty
+      ? errorMessage
+      : 'Please, insert mandatory fields.';
 
   @observable
   bool isLoading = false;
@@ -47,6 +51,9 @@ abstract class ProfileCreateControllerBase with Store {
 
   @observable
   String nickname = '';
+
+  @observable
+  String bio = '';
 
   // TODO: Implement age choice
   @observable
@@ -75,6 +82,9 @@ abstract class ProfileCreateControllerBase with Store {
 
   @action
   void setNickname(String v) => nickname = v;
+
+  @action
+  void setBio(String v) => bio = v;
 
   @action
   void setGender(Gender v) => gender = v;
@@ -126,6 +136,9 @@ abstract class ProfileCreateControllerBase with Store {
 
   Future<SaveResult> createProfile() async {
     generateNickname();
+
+    bio = 'Hi, my name is $name';
+
     profile = Profile(
       email: email,
       name: name,
@@ -140,6 +153,39 @@ abstract class ProfileCreateControllerBase with Store {
 
     final result = await profileRepository.createProfile(profile!);
     return result;
+  }
+
+  Future<bool> verifyNickname() async {
+    if (nickname.isNotEmpty) {
+      final nicknameAvailable =
+          await profileRepository.verifyNickname(nickname);
+      if (nicknameAvailable) return true;
+    }
+
+    if (nickname.isEmpty && profile!.nickname.isNotEmpty) return true;
+
+    errorMessage = 'Nickname already exists';
+
+    return false;
+  }
+
+  Future<SaveResult> updateProfile() async {
+    final nicknameAvailable = await verifyNickname();
+
+    if (nicknameAvailable) {
+      profile?.name = name.isNotEmpty ? name : profile!.name;
+      profile?.nickname = nickname.isNotEmpty ? nickname : profile!.nickname;
+      profile?.bio = bio.isNotEmpty ? bio : profile!.bio;
+      profile?.birthday = profile!.birthday;
+      profile?.city = city.isNotEmpty ? city : profile!.city;
+      profile?.country = country.isNotEmpty ? country : profile!.country;
+      profile?.interests = profile?.interests ?? [];
+
+      final result = await profileRepository.updateProfile(profile!);
+      return result;
+    } else {
+      return SaveResult.failed;
+    }
   }
 
   @computed

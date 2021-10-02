@@ -10,10 +10,13 @@ part 'profile_controller.g.dart';
 class ProfileController = ProfileControllerBase with _$ProfileController;
 
 abstract class ProfileControllerBase with Store {
-  ProfileControllerBase(this.owner, {this.other}) {
+  ProfileControllerBase(this.owner,
+      {this.other, this.follows = const <Follow>[]}) {
     print('Getting followers from ${(other ?? owner)?.uuid}!');
     observableStreamFollowers =
         profileRepository.followers(other ?? owner!).asObservable();
+    observableStreamFollowing =
+        profileRepository.following(other ?? owner!).asObservable();
     observableFutureProfile = profileRepository.getProfiles().asObservable();
 
     profile = other ?? owner;
@@ -28,28 +31,29 @@ abstract class ProfileControllerBase with Store {
   ProfileRepository profileRepository = ProfileRepository();
 
   ObservableStream<List<Follow>>? observableStreamFollowers;
+  ObservableStream<List<Follow>>? observableStreamFollowing;
   ObservableFuture<List<Profile>>? observableFutureProfile;
 
+  List<Follow> follows;
 
   @computed
   List<Profile> get profiles {
     if (observableFutureProfile == null) return <Profile>[];
 
-    final list = observableFutureProfile?.value?.toList() ?? <Profile>[];
-
-    List<Profile> profiles = <Profile>[];
+    List<Profile> list =
+        observableFutureProfile?.value?.toList() ?? <Profile>[];
 
     // TODO: Error here
-    if (followers.isNotEmpty) {
-      for (final follower in followers) {
-        final profile =
-            list.where((element) => element.uuid == follower.uuid).first;
-
-        profiles.add(profile);
-      }
+    if (follows.isNotEmpty) {
+      list = list.where((profile) {
+        for (final follow in follows) {
+          if (profile.uuid == follow.uuid) return true;
+        }
+        return false;
+      }).toList();
     }
 
-    return profiles;
+    return list;
   }
 
   @computed
@@ -57,6 +61,14 @@ abstract class ProfileControllerBase with Store {
     if (observableStreamFollowers == null) return <Follow>[];
 
     final list = observableStreamFollowers?.value?.toList() ?? <Follow>[];
+    return list;
+  }
+
+  @computed
+  List<Follow> get following {
+    if (observableStreamFollowing == null) return <Follow>[];
+
+    final list = observableStreamFollowing?.value?.toList() ?? <Follow>[];
     return list;
   }
 
@@ -70,7 +82,9 @@ abstract class ProfileControllerBase with Store {
       uuid: owner!.uuid,
     );
 
-    return await profileRepository.follow(following, follower);
+    final result = await profileRepository.follow(following, follower);
+
+    return result;
   }
 
   @action
@@ -83,7 +97,9 @@ abstract class ProfileControllerBase with Store {
       uuid: owner!.uuid,
     );
 
-    return await profileRepository.unfollow(following, follower);
+    final result = await profileRepository.unfollow(following, follower);
+
+    return result;
   }
 
   // TODO: Rename

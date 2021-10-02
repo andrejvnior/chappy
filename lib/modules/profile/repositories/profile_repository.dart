@@ -39,6 +39,15 @@ class ProfileRepository {
         query.docs.map((doc) => Follow.fromMap(doc.data())).toList());
   }
 
+  Stream<List<Follow>> following(Profile profile) {
+    print('Getting following in Repository from ${profile.uuid}!');
+    final followingCollection =
+        collection.doc(profile.uuid).collection('following');
+
+    return followingCollection.snapshots().map((query) =>
+        query.docs.map((doc) => Follow.fromMap(doc.data())).toList());
+  }
+
   Future<SaveResult> follow(Follow following, Follow follower) async {
     final followingCollection =
         collection.doc(follower.uuid).collection('following');

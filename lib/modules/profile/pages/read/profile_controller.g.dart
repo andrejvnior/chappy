@@ -9,6 +9,13 @@ part of 'profile_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ProfileController on ProfileControllerBase, Store {
+  Computed<List<Profile>>? _$profilesComputed;
+
+  @override
+  List<Profile> get profiles =>
+      (_$profilesComputed ??= Computed<List<Profile>>(() => super.profiles,
+              name: 'ProfileControllerBase.profiles'))
+          .value;
   Computed<List<Follow>>? _$followersComputed;
 
   @override
@@ -16,12 +23,12 @@ mixin _$ProfileController on ProfileControllerBase, Store {
       (_$followersComputed ??= Computed<List<Follow>>(() => super.followers,
               name: 'ProfileControllerBase.followers'))
           .value;
-  Computed<List<Profile>>? _$profilesComputed;
+  Computed<List<Follow>>? _$followingComputed;
 
   @override
-  List<Profile> get profiles =>
-      (_$profilesComputed ??= Computed<List<Profile>>(() => super.profiles,
-              name: 'ProfileControllerBase.profiles'))
+  List<Follow> get following =>
+      (_$followingComputed ??= Computed<List<Follow>>(() => super.following,
+              name: 'ProfileControllerBase.following'))
           .value;
   Computed<bool>? _$isOtherComputed;
 
@@ -54,8 +61,9 @@ mixin _$ProfileController on ProfileControllerBase, Store {
   @override
   String toString() {
     return '''
-followers: ${followers},
 profiles: ${profiles},
+followers: ${followers},
+following: ${following},
 isOther: ${isOther},
 isFollowing: ${isFollowing}
     ''';

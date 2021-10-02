@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:projects/modules/profile/models/profile.dart';
+import 'package:projects/modules/profile/pages/read/follow_page.dart';
 import 'package:projects/modules/profile/pages/read/followers/followers_page.dart';
 import 'package:projects/modules/profile/pages/read/profile_controller.dart';
 import 'package:projects/widgets/chappy_avatar.dart';
@@ -48,22 +49,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         ChappyAvatar(),
                         const SizedBox(width: 16),
                         const SizedBox(width: 16),
-                        Container(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('0'),
-                              Text('followers'),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 16),
                         GestureDetector(
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => FollowersPage(
-                                    profile: controller.profile!)),
+                              builder: (context) => FollowPage(
+                                follows: controller.followers,
+                                profile: widget.profile,
+                              ),
+                            ),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -73,6 +67,28 @@ class _ProfilePageState extends State<ProfilePage> {
                                     controller.followers.length.toString()),
                               ),
                               Text('followers'),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        GestureDetector(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FollowPage(
+                                follows: controller.following,
+                                profile: widget.profile,
+                              ),
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Observer(
+                                builder: (_) => Text(
+                                    controller.following.length.toString()),
+                              ),
+                              Text('following'),
                             ],
                           ),
                         ),

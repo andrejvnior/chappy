@@ -38,14 +38,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             onPressed: () async {
               final result = await controller.updateProfile();
               if (result == SaveResult.success) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfilePage(
-                      profile: controller.profile!,
-                    ),
-                  ),
-                );
+                Navigator.pop(context, controller.profile);
               } else {
                 controller.setErrorMessage();
               }

@@ -44,6 +44,21 @@ mixin _$ProfileController on ProfileControllerBase, Store {
               name: 'ProfileControllerBase.isFollowing'))
           .value;
 
+  final _$profileAtom = Atom(name: 'ProfileControllerBase.profile');
+
+  @override
+  Profile? get profile {
+    _$profileAtom.reportRead();
+    return super.profile;
+  }
+
+  @override
+  set profile(Profile? value) {
+    _$profileAtom.reportWrite(value, super.profile, () {
+      super.profile = value;
+    });
+  }
+
   final _$followAsyncAction = AsyncAction('ProfileControllerBase.follow');
 
   @override
@@ -58,9 +73,24 @@ mixin _$ProfileController on ProfileControllerBase, Store {
     return _$unfollowAsyncAction.run(() => super.unfollow());
   }
 
+  final _$ProfileControllerBaseActionController =
+      ActionController(name: 'ProfileControllerBase');
+
+  @override
+  void setProfile(Profile v) {
+    final _$actionInfo = _$ProfileControllerBaseActionController.startAction(
+        name: 'ProfileControllerBase.setProfile');
+    try {
+      return super.setProfile(v);
+    } finally {
+      _$ProfileControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
+profile: ${profile},
 profiles: ${profiles},
 followers: ${followers},
 following: ${following},

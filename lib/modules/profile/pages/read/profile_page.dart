@@ -25,110 +25,125 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     controller = ProfileController(widget.profile, other: widget.other);
+
+    print('HWLLO');
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('@${controller.profile!.nickname}'),
-      ),
-      body: Column(
-        children: [
-          Container(
-              height: 100,
-              color: Colors.blue,
-              child: Column(
-                children: [
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ChappyAvatar(
-                        image: controller.profile?.picture,
-                      ),
-                      const SizedBox(width: 16),
-                      const SizedBox(width: 16),
-                      GestureDetector(
-                        // TODO: GET RESULT AND DO EFFECT
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FollowPage(
-                              follows: controller.followers,
-                              profile: widget.profile,
-                            ),
-                          ),
-                        ),
-                        child: Column(
+        appBar: AppBar(
+            title: Observer(
+          builder: (_) => Text('@${controller.profile!.nickname}'),
+        )),
+        body: Observer(
+          builder: (_) {
+            return Column(
+              children: [
+                Container(
+                    height: 100,
+                    color: Colors.blue,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 16),
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Observer(
-                              builder: (_) =>
-                                  Text(controller.followers.length.toString()),
+                            ChappyAvatar(
+                              image: controller.profile?.picture,
                             ),
-                            const Text('followers'),
+                            const SizedBox(width: 16),
+                            const SizedBox(width: 16),
+                            GestureDetector(
+                              // TODO: GET RESULT AND DO EFFECT
+                              onTap: () {
+                                if (controller.followers.isNotEmpty) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FollowPage(
+                                        follows: controller.followers,
+                                        profile: widget.profile,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Observer(
+                                    builder: (_) => Text(
+                                        controller.followers.length.toString()),
+                                  ),
+                                  const Text('followers'),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            GestureDetector(
+                              // TODO: GET RESULT AND DO EFFECT
+                              onTap: () {
+                                if (controller.following.isNotEmpty) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FollowPage(
+                                        follows: controller.following,
+                                        profile: widget.profile,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Observer(
+                                    builder: (_) => Text(
+                                        controller.following.length.toString()),
+                                  ),
+                                  const Text('following'),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
-                      ),
-                      const SizedBox(width: 16),
-                      GestureDetector(
-                        // TODO: GET RESULT AND DO EFFECT
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FollowPage(
-                              follows: controller.following,
-                              profile: widget.profile,
-                            ),
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Observer(
-                              builder: (_) =>
-                                  Text(controller.following.length.toString()),
-                            ),
-                            const Text('following'),
-                          ],
-                        ),
-                      ),
-                    ],
+                        const SizedBox(height: 16),
+                        Text(controller.profile!.bio.isNotEmpty
+                            ? controller.profile!.bio
+                            : 'Hello, my name is ${controller.profile!.name}.'),
+                      ],
+                    )),
+                if (controller.isOther) ...[
+                  Observer(
+                    builder: (_) => TextButton(
+                      onPressed: () => controller.isFollowing
+                          ? controller.unfollow()
+                          : controller.follow(),
+                      child:
+                          Text(controller.isFollowing ? 'Unfollow' : 'Follow'),
+                    ),
                   ),
-                  const SizedBox(height: 16),
-                  Text(controller.profile!.bio.isNotEmpty
-                      ? controller.profile!.bio
-                      : 'Hello, my name is ${controller.profile!.name}.'),
+                ] else ...[
+                  TextButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ProfileEditPage(profile: widget.profile),
+                      ),
+                    ).then((value) => controller.setProfile(value)),
+                    child: const Text('Edit Profile'),
+                  ),
                 ],
-              )),
-          if (controller.isOther) ...[
-            Observer(
-              builder: (_) => TextButton(
-                onPressed: () => controller.isFollowing
-                    ? controller.unfollow()
-                    : controller.follow(),
-                child: Text(controller.isFollowing ? 'Unfollow' : 'Follow'),
-              ),
-            ),
-          ] else ...[
-            TextButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      ProfileEditPage(profile: widget.profile),
+                const Expanded(
+                  child: Text('Feed'),
                 ),
-              ),
-              child: const Text('Edit Profile'),
-            ),
-          ],
-          const Expanded(
-            child: Text('Feed'),
-          ),
-        ],
-      ),
-    );
+              ],
+            );
+          },
+        ));
   }
 }

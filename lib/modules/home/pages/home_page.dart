@@ -36,6 +36,15 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
+        leading: ChappyAvatar(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfilePage(profile: controller.profile!),
+            ),
+          ),
+          image: controller.profile?.picture,
+        ),
         title: const Text('Chappy'),
         automaticallyImplyLeading: false,
         actions: [
@@ -77,15 +86,6 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 16),
-          ChappyAvatar(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProfilePage(profile: controller.profile!),
-              ),
-            ),
-          ),
           const SizedBox(height: 16),
           TextButton(
             onPressed: () => Navigator.push(

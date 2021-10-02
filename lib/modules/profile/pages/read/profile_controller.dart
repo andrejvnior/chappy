@@ -19,9 +19,12 @@ abstract class ProfileControllerBase with Store {
     observableFutureProfile = profileRepository.getProfiles().asObservable();
 
     profile = other ?? owner;
+    print('HWLLO');
   }
 
+  @observable
   Profile? profile;
+
   Profile? owner;
 
   // TODO: Rename
@@ -100,6 +103,9 @@ abstract class ProfileControllerBase with Store {
 
     return result;
   }
+
+  @action
+  void setProfile(Profile v) => profile = v;
 
   // TODO: Rename
   @computed

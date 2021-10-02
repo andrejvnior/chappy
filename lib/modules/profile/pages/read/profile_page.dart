@@ -45,7 +45,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                     const  ChappyAvatar(),
+                      ChappyAvatar(
+                        image: controller.profile?.picture,
+                      ),
                       const SizedBox(width: 16),
                       const SizedBox(width: 16),
                       GestureDetector(
@@ -63,8 +65,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Observer(
-                              builder: (_) => Text(
-                                  controller.followers.length.toString()),
+                              builder: (_) =>
+                                  Text(controller.followers.length.toString()),
                             ),
                             const Text('followers'),
                           ],
@@ -86,8 +88,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Observer(
-                              builder: (_) => Text(
-                                  controller.following.length.toString()),
+                              builder: (_) =>
+                                  Text(controller.following.length.toString()),
                             ),
                             const Text('following'),
                           ],

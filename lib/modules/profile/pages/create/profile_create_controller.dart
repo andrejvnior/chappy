@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'dart:math';
 
+import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projects/core/extensions.dart';
 import 'package:projects/models/firebase_model.dart';
+import 'package:projects/modules/camera/models/camera.dart';
 import 'package:projects/modules/profile/models/gender.dart';
 import 'package:projects/modules/profile/repositories/profile_repository.dart';
 
@@ -20,6 +23,8 @@ abstract class ProfileCreateControllerBase with Store {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   ProfileRepository profileRepository = ProfileRepository();
+
+  Camera camera = Camera();
 
   Profile? originalProfile;
   Profile? profile;
@@ -68,6 +73,12 @@ abstract class ProfileCreateControllerBase with Store {
   @observable
   String country = '';
 
+  @observable
+  File? imageFile;
+
+  @observable
+  String picture = '';
+
   @action
   void setEmail(String v) => email = v;
 
@@ -97,6 +108,11 @@ abstract class ProfileCreateControllerBase with Store {
 
   @action
   void setCountry(String v) => country = v;
+
+  @action
+  Future<void> takePicture(ImageSource imageSource) async {
+    imageFile = await camera.pickImage(imageSource);
+  }
 
   @computed
   bool get emailValid => email.isNotEmpty && email.isEmail;
@@ -148,6 +164,7 @@ abstract class ProfileCreateControllerBase with Store {
       birthday: birthday,
       city: city,
       country: country,
+      picture: picture,
       interests: [],
     );
 
@@ -170,6 +187,7 @@ abstract class ProfileCreateControllerBase with Store {
   }
 
   Future<SaveResult> updateProfile() async {
+    SaveResult result;
     final nicknameAvailable = await verifyNickname();
 
     if (nicknameAvailable) {
@@ -179,9 +197,14 @@ abstract class ProfileCreateControllerBase with Store {
       profile?.birthday = profile!.birthday;
       profile?.city = city.isNotEmpty ? city : profile!.city;
       profile?.country = country.isNotEmpty ? country : profile!.country;
+      profile?.picture = picture.isNotEmpty ? picture : profile!.picture;
       profile?.interests = profile?.interests ?? [];
 
-      final result = await profileRepository.updateProfile(profile!);
+      if (imageFile != null) {
+        profile?.picture = await camera.upload(imageFile!);
+      }
+
+      result = await profileRepository.updateProfile(profile!);
       return result;
     } else {
       return SaveResult.failed;

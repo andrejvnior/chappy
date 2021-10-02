@@ -261,6 +261,44 @@ mixin _$ProfileCreateController on ProfileCreateControllerBase, Store {
     });
   }
 
+  final _$imageFileAtom = Atom(name: 'ProfileCreateControllerBase.imageFile');
+
+  @override
+  File? get imageFile {
+    _$imageFileAtom.reportRead();
+    return super.imageFile;
+  }
+
+  @override
+  set imageFile(File? value) {
+    _$imageFileAtom.reportWrite(value, super.imageFile, () {
+      super.imageFile = value;
+    });
+  }
+
+  final _$pictureAtom = Atom(name: 'ProfileCreateControllerBase.picture');
+
+  @override
+  String get picture {
+    _$pictureAtom.reportRead();
+    return super.picture;
+  }
+
+  @override
+  set picture(String value) {
+    _$pictureAtom.reportWrite(value, super.picture, () {
+      super.picture = value;
+    });
+  }
+
+  final _$takePictureAsyncAction =
+      AsyncAction('ProfileCreateControllerBase.takePicture');
+
+  @override
+  Future<void> takePicture(ImageSource imageSource) {
+    return _$takePictureAsyncAction.run(() => super.takePicture(imageSource));
+  }
+
   final _$ProfileCreateControllerBaseActionController =
       ActionController(name: 'ProfileCreateControllerBase');
 
@@ -411,6 +449,8 @@ birthday: ${birthday},
 gender: ${gender},
 city: ${city},
 country: ${country},
+imageFile: ${imageFile},
+picture: ${picture},
 emailValid: ${emailValid},
 passwordValid: ${passwordValid},
 confirmPasswordValid: ${confirmPasswordValid},

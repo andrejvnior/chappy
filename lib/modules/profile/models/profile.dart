@@ -9,6 +9,7 @@ class Profile extends FirebaseModel {
   DateTime birthday;
   String city;
   String country;
+  String picture;
   List<int> interests;
 
   Profile({
@@ -21,6 +22,7 @@ class Profile extends FirebaseModel {
     required this.city,
     required this.country,
     required this.interests,
+    required this.picture,
     String uuid = '',
     DateTime? createdAt,
   }) : super(
@@ -38,6 +40,7 @@ class Profile extends FirebaseModel {
             map['birthday'].millisecondsSinceEpoch),
         city = map['city'] as String,
         country = map['country'] as String,
+        picture = map['picture'] as String,
         interests = map['interests'].cast<int>(),
         super.fromMap(map);
 
@@ -53,6 +56,7 @@ class Profile extends FirebaseModel {
       'birthday': birthday,
       'city': city,
       'country': country,
+      'picture': picture,
       'interests': interests,
       'createdAt': createdAt,
     };

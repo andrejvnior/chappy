@@ -7,7 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projects/core/extensions.dart';
 import 'package:projects/models/firebase_model.dart';
 import 'package:projects/modules/camera/models/camera.dart';
-import 'package:projects/modules/profile/models/gender.dart';
 import 'package:projects/modules/profile/repositories/profile_repository.dart';
 
 import 'package:projects/modules/profile/models/profile.dart';
@@ -130,7 +129,7 @@ abstract class ProfileCreateControllerBase with Store {
   bool get nicknameValid => nickname.isNotEmpty && name.length > 2;
 
   @computed
-  bool get genderValid => gender != null;
+  bool get genderValid => gender.isNotEmpty;
 
   // TODO: Implement birthday validation for 18+
   @computed

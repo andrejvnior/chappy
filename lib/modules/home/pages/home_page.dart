@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:projects/modules/auth/pages/signin/signin_page.dart';
 import 'package:projects/modules/chat/page/read/chat_page.dart';
 import 'package:projects/modules/home/pages/widgets/chat_item.dart';
 import 'package:projects/modules/interests/models/interest.dart';
@@ -8,9 +7,11 @@ import 'package:projects/modules/interests/pages/interest_page.dart';
 import 'package:projects/modules/profile/models/profile.dart';
 import 'package:projects/modules/profile/pages/read/profile_page.dart';
 import 'package:projects/themes/chappy_colors.dart';
+import 'package:projects/themes/chappy_icons.dart';
 import 'package:projects/themes/chappy_texts.dart';
 import 'package:projects/widgets/chappy_app_bar.dart';
 import 'package:projects/widgets/chappy_avatar.dart';
+import 'package:projects/widgets/chappy_icon.dart';
 import 'package:projects/widgets/chappy_text_input.dart';
 
 import 'home_controller.dart';
@@ -58,54 +59,73 @@ class _HomePageState extends State<HomePage> {
           titleStyle: ChappyTexts.brand.apply(color: ChappyColors.primaryColor),
           actions: [
             // TODO: Change provisional icons
-            GestureDetector(
-              onTap: () => controller.logout().whenComplete(() =>
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SignInPage()))),
-              child: const SizedBox(
-                width: 32,
-                height: 75,
-                child: Icon(Icons.access_time_sharp),
-              ),
+            Stack(
+              children: [
+                ChappyIcon(
+                  onPressed: () {},
+                  icon: ChappyIcons.mention,
+                  color: ChappyColors.grey900,
+                ),
+                Positioned(
+                  top: 4,
+                  right: 4,
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 13,
+                    height: 13,
+                    decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: const Text(
+                      '7',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w700,
+                        fontSize: 8,
+                        letterSpacing: 0.15,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            GestureDetector(
-              onTap: () => controller.logout().whenComplete(() =>
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SignInPage()))),
-              child: const SizedBox(
-                width: 32,
-                height: 75,
-                child: Icon(Icons.menu),
-              ),
+            ChappyIcon(
+              onPressed: () {},
+              icon: ChappyIcons.filter,
+              color: ChappyColors.grey900,
             ),
           ],
         ),
       ),
+      // TODO: Implement dynamic bottom bar
       bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
         color: Colors.white,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextButton(
+            ChappyIcon(
               onPressed: () {},
-              child: const Text('home'),
+              icon: ChappyIcons.home,
+              color: ChappyColors.primaryColor,
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatPage(
-                      profile: controller.profile,
-                    ),
+            ChappyIcon(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatPage(
+                    profile: controller.profile,
                   ),
-                );
-              },
-              child: const Text('chat'),
+                ),
+              ),
+              icon: ChappyIcons.chat,
+              color: ChappyColors.grey900,
+            ),
+            ChappyIcon(
+              onPressed: () {},
+              icon: ChappyIcons.message,
+              color: ChappyColors.grey900,
             ),
           ],
         ),
@@ -114,19 +134,18 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Observer(
-              builder: (_)=>ChappyTextInput(
-                hintText: 'Search for chat rooms...',
-                suffixIcon: const Icon(
-                  Icons.search,
-                  color: ChappyColors.grey,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Observer(
+                builder: (_) => ChappyTextInput(
+                  hintText: 'Search for chat rooms...',
+                  suffixIcon: const ChappyIcon(
+                    icon: ChappyIcons.search,
+                    color: ChappyColors.grey,
+                  ),
+                  onChanged: controller.setSearchText,
+                  borderRadius: BorderRadius.circular(50),
                 ),
-                onChanged: controller.setSearchText,
-                borderRadius: BorderRadius.circular(50),
-              ),
-            )
-          ),
+              )),
           const SizedBox(height: 16),
           SizedBox(
               height: 36,

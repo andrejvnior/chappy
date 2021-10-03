@@ -21,7 +21,7 @@ class ChappyAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.all(16),
         color: Colors.white,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:projects/modules/chat/page/create/chat_create_page.dart';
 import 'package:projects/modules/chat/page/read/chat_page.dart';
 import 'package:projects/modules/home/pages/widgets/chat_item.dart';
 import 'package:projects/modules/interests/models/interest.dart';
@@ -114,7 +115,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ChatPage(
+                  builder: (context) => ChatCreatePage(
                     profile: controller.profile,
                   ),
                 ),
@@ -247,6 +248,7 @@ class _HomePageState extends State<HomePage> {
                                   ));
                         },
                         chat: list[index],
+                        image: list[index].picture,
                         profile: controller.profile);
                   });
             }),

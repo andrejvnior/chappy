@@ -73,9 +73,6 @@ abstract class ProfileCreateControllerBase with Store {
   String country = '';
 
   @observable
-  File? imageFile;
-
-  @observable
   String picture = '';
 
   @action
@@ -108,11 +105,6 @@ abstract class ProfileCreateControllerBase with Store {
   @action
   void setCountry(String v) => country = v;
 
-  @action
-  Future<void> takePicture(ImageSource imageSource) async {
-    imageFile = await camera.pickImage(imageSource);
-  }
-
   @computed
   bool get emailValid => email.isNotEmpty && email.isEmail;
 
@@ -140,6 +132,16 @@ abstract class ProfileCreateControllerBase with Store {
 
   @computed
   bool get countryValid => country.isNotEmpty;
+
+
+
+  @observable
+  File? imageFile;
+
+  @action
+  Future<void> takePicture(ImageSource imageSource) async {
+    imageFile = await camera.pickImage(imageSource);
+  }
 
   void generateNickname() {
     List<String> list = name.split(' ');

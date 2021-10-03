@@ -9,8 +9,9 @@ class ChatItem extends StatelessWidget {
   final Chat chat;
   final Profile? profile;
   final VoidCallback? onPressed;
+  final String image;
 
-  const ChatItem({Key? key, required this.chat, this.profile, this.onPressed})
+  const ChatItem({Key? key, required this.chat, this.profile, this.onPressed, this.image = ''})
       : super(key: key);
 
   @override
@@ -22,9 +23,9 @@ class ChatItem extends StatelessWidget {
         decoration: const BoxDecoration(
             border: Border(
                 bottom: BorderSide(
-          width: 1,
-          color: ChappyColors.grey100,
-        ))),
+                  width: 1,
+                  color: ChappyColors.grey100,
+                ))),
         child: Row(
           children: [
             Container(
@@ -32,7 +33,20 @@ class ChatItem extends StatelessWidget {
               height: 50,
               decoration: BoxDecoration(
                   color: ChappyColors.grey300,
-                  borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8),
+                  image: image.isNotEmpty ? DecorationImage(
+                    image: NetworkImage(
+                      image,
+                    ),
+                    fit: BoxFit.cover,
+                  ) : const DecorationImage(
+                    // TODO: Implement AssetImage later
+                    image: NetworkImage(
+                      'https://media.tarkett-image.com/large/TH_26500003_001.jpg',
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(

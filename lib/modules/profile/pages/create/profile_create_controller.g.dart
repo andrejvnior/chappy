@@ -261,21 +261,6 @@ mixin _$ProfileCreateController on ProfileCreateControllerBase, Store {
     });
   }
 
-  final _$imageFileAtom = Atom(name: 'ProfileCreateControllerBase.imageFile');
-
-  @override
-  File? get imageFile {
-    _$imageFileAtom.reportRead();
-    return super.imageFile;
-  }
-
-  @override
-  set imageFile(File? value) {
-    _$imageFileAtom.reportWrite(value, super.imageFile, () {
-      super.imageFile = value;
-    });
-  }
-
   final _$pictureAtom = Atom(name: 'ProfileCreateControllerBase.picture');
 
   @override
@@ -288,6 +273,21 @@ mixin _$ProfileCreateController on ProfileCreateControllerBase, Store {
   set picture(String value) {
     _$pictureAtom.reportWrite(value, super.picture, () {
       super.picture = value;
+    });
+  }
+
+  final _$imageFileAtom = Atom(name: 'ProfileCreateControllerBase.imageFile');
+
+  @override
+  File? get imageFile {
+    _$imageFileAtom.reportRead();
+    return super.imageFile;
+  }
+
+  @override
+  set imageFile(File? value) {
+    _$imageFileAtom.reportWrite(value, super.imageFile, () {
+      super.imageFile = value;
     });
   }
 
@@ -449,8 +449,8 @@ birthday: ${birthday},
 gender: ${gender},
 city: ${city},
 country: ${country},
-imageFile: ${imageFile},
 picture: ${picture},
+imageFile: ${imageFile},
 emailValid: ${emailValid},
 passwordValid: ${passwordValid},
 confirmPasswordValid: ${confirmPasswordValid},

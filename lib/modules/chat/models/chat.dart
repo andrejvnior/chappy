@@ -3,12 +3,14 @@ import 'package:projects/models/firebase_model.dart';
 class Chat extends FirebaseModel {
   final String title;
   final String description;
-  final int category;
+  final int category; // TODO: Implement multiple categories
+  final String picture;
 
   Chat({
     this.title = '',
     this.description = '',
     this.category = 0,
+    this.picture = '',
     String uuid = '',
     DateTime? createdAt,
   }) : super(
@@ -20,6 +22,7 @@ class Chat extends FirebaseModel {
       : title = map['title'] as String,
         description = map['description'] as String,
         category = map['category'] as int,
+        picture = map['image'] as String,
         super.fromMap(map);
 
   @override
@@ -29,6 +32,7 @@ class Chat extends FirebaseModel {
       'title': title,
       'description': description,
       'category': category,
+      'image': picture,
       'createdAt': createdAt,
     };
   }

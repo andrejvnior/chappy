@@ -6,6 +6,7 @@ import 'package:projects/modules/profile/models/profile.dart';
 import 'package:projects/modules/profile/pages/create/profile_create_controller.dart';
 import 'package:projects/modules/profile/pages/create/profile_create_page.dart';
 import 'package:projects/widgets/chappy_avatar.dart';
+import 'package:projects/widgets/chappy_camera_options.dart';
 import 'package:projects/widgets/chappy_text_input.dart';
 
 class ProfileEditPage extends StatefulWidget {
@@ -64,7 +65,10 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () => _cameraOptions(context),
+                  onPressed: () => showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) => ChappyCameraOptions(
+                          onSelected: controller.takePicture)),
                   child: const Text('Take Picture'),
                 ),
                 Observer(
@@ -111,32 +115,5 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         },
       ),
     );
-  }
-
-  void _cameraOptions(context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return Wrap(
-            children: <Widget>[
-              ListTile(
-                leading: const Icon(Icons.image),
-                title: const Text('Galeria'),
-                onTap: () {
-                  controller.takePicture(ImageSource.gallery);
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.camera_alt),
-                title: const Text('Camera'),
-                onTap: () {
-                  controller.takePicture(ImageSource.camera);
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        });
   }
 }

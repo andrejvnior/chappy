@@ -92,6 +92,44 @@ mixin _$ChatCreateController on ChatCreateControllerBase, Store {
     });
   }
 
+  final _$pictureAtom = Atom(name: 'ChatCreateControllerBase.picture');
+
+  @override
+  String get picture {
+    _$pictureAtom.reportRead();
+    return super.picture;
+  }
+
+  @override
+  set picture(String value) {
+    _$pictureAtom.reportWrite(value, super.picture, () {
+      super.picture = value;
+    });
+  }
+
+  final _$imageFileAtom = Atom(name: 'ChatCreateControllerBase.imageFile');
+
+  @override
+  File? get imageFile {
+    _$imageFileAtom.reportRead();
+    return super.imageFile;
+  }
+
+  @override
+  set imageFile(File? value) {
+    _$imageFileAtom.reportWrite(value, super.imageFile, () {
+      super.imageFile = value;
+    });
+  }
+
+  final _$takePictureAsyncAction =
+      AsyncAction('ChatCreateControllerBase.takePicture');
+
+  @override
+  Future<void> takePicture(ImageSource imageSource) {
+    return _$takePictureAsyncAction.run(() => super.takePicture(imageSource));
+  }
+
   final _$createChatAsyncAction =
       AsyncAction('ChatCreateControllerBase.createChat');
 
@@ -162,6 +200,8 @@ isLoading: ${isLoading},
 title: ${title},
 description: ${description},
 category: ${category},
+picture: ${picture},
+imageFile: ${imageFile},
 isValid: ${isValid}
     ''';
   }

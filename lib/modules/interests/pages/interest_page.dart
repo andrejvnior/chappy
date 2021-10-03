@@ -13,10 +13,14 @@ import 'package:projects/widgets/chappy_grid_item.dart';
 class InterestPage extends StatefulWidget {
   final Profile profile;
   final List<int>? interests;
+  final bool isSelection;
 
-  const InterestPage(
-      {Key? key, required this.profile, this.interests = const <int>[]})
-      : super(key: key);
+  const InterestPage({
+    Key? key,
+    required this.profile,
+    this.interests = const <int>[],
+    this.isSelection = false,
+  }) : super(key: key);
 
   @override
   State<InterestPage> createState() => _InterestPageState();
@@ -45,20 +49,25 @@ class _InterestPageState extends State<InterestPage> {
           actions: [
             GestureDetector(
               onTap: () async {
-                if (controller.isValid) {
-                  final result = await controller.updateProfileInterests();
-                  if (result == SaveResult.success) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomePage(
-                          profile: controller.profile!,
-                        ),
-                      ),
-                    );
-                  }
+                if (widget.isSelection) {
+                  final interest = controller.interests?.first;
+                  Navigator.pop(context, interest);
                 } else {
-                  controller.setErrorMessage();
+                  if (controller.isValid) {
+                    final result = await controller.updateProfileInterests();
+                    if (result == SaveResult.success) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomePage(
+                            profile: controller.profile!,
+                          ),
+                        ),
+                      );
+                    }
+                  } else {
+                    controller.setErrorMessage();
+                  }
                 }
               },
               child: SizedBox(
@@ -73,7 +82,7 @@ class _InterestPageState extends State<InterestPage> {
           ],
         ),
       ),
-      body:Column(
+      body: Column(
         children: [
           Observer(
             builder: (_) {
@@ -86,28 +95,27 @@ class _InterestPageState extends State<InterestPage> {
             },
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: GridView.builder(
-                  itemCount: interestList.length - 1,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    return Observer(builder: (_) {
-                      return ChappyGridItem(
-                        title: interestList[index].title ?? '',
-                        onPressed: () =>
-                            controller.toggleInterest(interestList[index].id!),
-                        isSelected: controller.interests!
-                            .contains(interestList[index].id),
-                      );
-                    });
-                  }),
-            )
-          ),
+              child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: GridView.builder(
+                itemCount: interestList.length - 1,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                ),
+                itemBuilder: (BuildContext context, int index) {
+                  return Observer(builder: (_) {
+                    return ChappyGridItem(
+                      title: interestList[index].title ?? '',
+                      onPressed: () =>
+                          controller.toggleInterest(interestList[index].id!),
+                      isSelected: controller.interests!
+                          .contains(interestList[index].id),
+                    );
+                  });
+                }),
+          )),
         ],
       ),
     );

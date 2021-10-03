@@ -4,9 +4,13 @@ import 'package:projects/models/firebase_model.dart';
 import 'package:projects/modules/chat/page/create/chat_create_controller.dart';
 import 'package:projects/modules/chat/page/read/chat_page.dart';
 import 'package:projects/modules/interests/models/interest.dart';
+import 'package:projects/modules/interests/pages/interest_page.dart';
 import 'package:projects/modules/profile/models/profile.dart';
 import 'package:projects/themes/chappy_colors.dart';
+import 'package:projects/themes/chappy_texts.dart';
+import 'package:projects/widgets/chappy_app_bar.dart';
 import 'package:projects/widgets/chappy_button.dart';
+import 'package:projects/widgets/chappy_camera_options.dart';
 import 'package:projects/widgets/chappy_text_input.dart';
 
 class ChatCreatePage extends StatefulWidget {
@@ -30,8 +34,25 @@ class _ChatCreatePageState extends State<ChatCreatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Criar Chat'),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(75), // Set Set this height
+        child: ChappyAppBar(
+          leading: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: SizedBox(
+              width: 50,
+              child: Text(
+                'Back',
+                style: ChappyTexts.subtitle2
+                    .apply(color: ChappyColors.primaryColor),
+              ),
+            ),
+          ),
+          title: 'Create chat',
+          actions: [
+            Container(width: 50),
+          ],
+        ),
       ),
       body: Observer(
         builder: (_) {
@@ -45,39 +66,81 @@ class _ChatCreatePageState extends State<ChatCreatePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Observer(
+                  builder: (_) => GestureDetector(
+                    onTap: () => showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) => ChappyCameraOptions(
+                            onSelected: controller.takePicture)),
+                    child: Observer(
+                      builder: (_) => Container(
+                        width: 100,
+                        height: 100,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: ChappyColors.grey100,
+                          border: Border.all(color: ChappyColors.grey),
+                          borderRadius: BorderRadius.circular(100),
+                          image: controller.imageFile != null
+                              ? DecorationImage(
+                                  image: FileImage(
+                                    controller.imageFile!,
+                                  ),
+                                  fit: BoxFit.cover,
+                                  scale: 12,
+                                )
+                              : const DecorationImage(
+                                  //TODO: Change default image
+                                  image: NetworkImage(
+                                    'https://cdn3.iconfinder.com/data/icons/linecons-free-vector-icons-pack/32/camera-512.png',
+                                  ),
+                                  scale: 12,
+                                ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
                 ChappyTextInput(
                   hintText: 'Title',
                   onChanged: controller.setTitle,
                 ),
+                const SizedBox(height: 16),
                 ChappyTextInput(
                   hintText: 'Description',
                   onChanged: controller.setDescription,
                 ),
-                SizedBox(
-                  height: 100,
-                  child: ListView.builder(
-                    itemCount: interestList.length - 1,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Observer(
-                        builder: (_) => GestureDetector(
-                          onTap: () =>
-                              controller.setCategory(interestList[index].id!),
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color:
-                              interestList[index].id == controller.category
-                                      ? ChappyColors.primaryColor
-                                      : Colors.grey.shade400,
-                            ),
-                            child: Text(interestList[index].title ?? ''),
-                          ),
+                const SizedBox(height: 16),
+                GestureDetector(
+                  onTap: () async {
+                    final category = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => InterestPage(
+                          profile: controller.profile!,
+                          isSelection: true,
                         ),
-                      );
-                    },
+                      ),
+                    );
+                    controller.setCategory(category as int);
+                  },
+                  child: Observer(
+                    builder: (_) => Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        controller.category != 0
+                            ? 'Category selected: ${interestList.firstWhere((interest) => interest.id == controller.category).title}'
+                            : 'Select a category',
+                        style: ChappyTexts.subtitle2
+                            .apply(color: ChappyColors.primaryColor),
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                Expanded(
+                  child: Container(),
+                ),
                 ChappyButton(
                   onPressed: () async {
                     if (controller.isValid) {

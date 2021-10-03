@@ -4,8 +4,11 @@ import 'package:projects/models/firebase_model.dart';
 import 'package:projects/modules/interests/pages/interest_page.dart';
 import 'package:projects/modules/profile/models/gender.dart';
 import 'package:projects/modules/profile/pages/create/profile_create_controller.dart';
+import 'package:projects/themes/chappy_colors.dart';
+import 'package:projects/themes/chappy_texts.dart';
 import 'package:projects/widgets/chappy_app_bar.dart';
 import 'package:projects/widgets/chappy_button.dart';
+import 'package:projects/widgets/chappy_drop_down.dart';
 import 'package:projects/widgets/chappy_text_input.dart';
 
 class ProfileCreatePage extends StatefulWidget {
@@ -46,26 +49,41 @@ class _ProfileCreatePageState extends State<ProfileCreatePage> {
                   onChanged: controller.setName,
                 ),
                 const SizedBox(height: 16),
-                DropdownButton<Gender>(
-                  value: controller.gender,
-                  icon: const Icon(Icons.arrow_downward),
-                  // iconSize: 24,
-                  // elevation: 16,
-                  isExpanded: true,
-                  style: TextStyle(color: Colors.grey.shade500),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.grey.shade500,
+                Observer(
+                  builder: (_) => ChappyDropDown(
+                    value: controller.gender.isNotEmpty
+                        ? controller.gender
+                        : 'Select gender',
+                    onSelected: (value) => controller.setGender(value),
                   ),
-                  onChanged: (v) => controller.setGender(v!),
-                  items:
-                      genderList.map<DropdownMenuItem<Gender>>((Gender gender) {
-                    return DropdownMenuItem<Gender>(
-                      value: gender,
-                      child: Text(gender.title ?? 'Select Gender'),
-                    );
-                  }).toList(),
                 ),
+                // DropdownButton<Gender>(
+                //   focusColor: Colors.amber,
+                //   value: controller.gender,
+                //   icon: Container(),
+                //   underline: Container(),
+                //   isExpanded: true,
+                //   style: TextStyle(color: Colors.grey.shade500),
+                //   onChanged: (v) => controller.setGender(v!),
+                //   items:
+                //       genderList.map<DropdownMenuItem<Gender>>((Gender gender) {
+                //     return DropdownMenuItem<Gender>(
+                //       value: gender,
+                //       child: Container(
+                //           padding: const EdgeInsets.symmetric(horizontal: 16),
+                //           height: 50,
+                //           decoration: BoxDecoration(
+                //               color: ChappyColors.grey100,
+                //               borderRadius: BorderRadius.circular(8),
+                //               border: Border.all(color: ChappyColors.grey300)),
+                //           child: Row(
+                //             children: [
+                //               Text(controller.gender?.title ?? 'Select gender'),
+                //             ],
+                //           )),
+                //     );
+                //   }).toList(),
+                // ),
                 const SizedBox(height: 16),
                 ChappyTextInput(
                   hintText: controller.birthday.toString(),

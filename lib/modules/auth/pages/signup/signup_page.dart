@@ -38,9 +38,10 @@ class _SignUpPageState extends State<SignUpPage> {
             );
           }
           return Container(
+            alignment: Alignment.center,
             padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: ListView(
+              shrinkWrap: true,
               children: [
                 ChappyTextInput(
                   hintText: 'Email',
@@ -120,7 +121,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       controller.setErrorMessage();
                     }
                   },
-                  title: 'Register',
+                  title: 'Sign Up',
                 ),
                 Observer(
                   builder: (_) {
@@ -149,13 +150,10 @@ class _SignUpPageState extends State<SignUpPage> {
                           style: ChappyTexts.caption
                               .apply(color: ChappyColors.grey900),
                         ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Text(
-                            'Sign In',
-                            style: ChappyTexts.caption
-                                .apply(color: ChappyColors.primaryColor),
-                          ),
+                        Text(
+                          'Sign In',
+                          style: ChappyTexts.caption
+                              .apply(color: ChappyColors.primaryColor),
                         ),
                         Text(
                           '!',

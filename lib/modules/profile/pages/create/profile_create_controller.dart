@@ -65,7 +65,7 @@ abstract class ProfileCreateControllerBase with Store {
   DateTime birthday = DateTime.now().subtract(const Duration(days: 8665));
 
   @observable
-  Gender? gender;
+  String gender = '';
 
   @observable
   String city = '';
@@ -98,7 +98,7 @@ abstract class ProfileCreateControllerBase with Store {
   void setBio(String v) => bio = v;
 
   @action
-  void setGender(Gender v) => gender = v;
+  void setGender(String v) => gender = v;
 
   @action
   void setBirthday(DateTime v) => birthday = v;
@@ -159,8 +159,8 @@ abstract class ProfileCreateControllerBase with Store {
       email: email,
       name: name,
       nickname: nickname,
-      gender: gender?.title ?? '',
-      bio: '',
+      gender: gender,
+      bio: bio,
       birthday: birthday,
       city: city,
       country: country,

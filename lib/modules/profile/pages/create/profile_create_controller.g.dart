@@ -219,13 +219,13 @@ mixin _$ProfileCreateController on ProfileCreateControllerBase, Store {
   final _$genderAtom = Atom(name: 'ProfileCreateControllerBase.gender');
 
   @override
-  Gender? get gender {
+  String get gender {
     _$genderAtom.reportRead();
     return super.gender;
   }
 
   @override
-  set gender(Gender? value) {
+  set gender(String value) {
     _$genderAtom.reportWrite(value, super.gender, () {
       super.gender = value;
     });
@@ -391,7 +391,7 @@ mixin _$ProfileCreateController on ProfileCreateControllerBase, Store {
   }
 
   @override
-  void setGender(Gender v) {
+  void setGender(String v) {
     final _$actionInfo = _$ProfileCreateControllerBaseActionController
         .startAction(name: 'ProfileCreateControllerBase.setGender');
     try {

@@ -11,7 +11,7 @@ class Gender {
 }
 
 const genderList = [
-  Gender(0, 'male', GenderType.male),
-  Gender(1, 'female', GenderType.female),
-  Gender(2, 'others', GenderType.others),
+  Gender(0, 'Male', GenderType.male),
+  Gender(1, 'Female', GenderType.female),
+  Gender(2, 'Others', GenderType.others),
 ];

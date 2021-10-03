@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:projects/models/firebase_model.dart';
+import 'package:projects/modules/auth/pages/signup/signup_page.dart';
 import 'package:projects/modules/home/pages/home_page.dart';
 import 'package:projects/themes/chappy_colors.dart';
 import 'package:projects/themes/chappy_texts.dart';
@@ -27,7 +28,12 @@ class _SignInPageState extends State<SignInPage> {
         preferredSize: const Size.fromHeight(75), // Set Set this height
         child: ChappyAppBar(
           leading: GestureDetector(
-            onTap: () => Navigator.pop(context),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SignUpPage(),
+              ),
+            ),
             child: SizedBox(
               width: 50,
               child: Text(
@@ -44,9 +50,10 @@ class _SignInPageState extends State<SignInPage> {
         ),
       ),
       body: Container(
+        alignment: Alignment.center,
         padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
+          shrinkWrap: true,
           children: [
             ChappyTextInput(
               hintText: 'Email',
@@ -92,9 +99,9 @@ class _SignInPageState extends State<SignInPage> {
               title: 'Sign In',
             ),
             GestureDetector(
-              onTap: () {
-              },
+              onTap: () {},
               child: Container(
+                alignment: Alignment.center,
                 margin: const EdgeInsets.only(top: 16),
                 child: Text(
                   'Forgot your password?',

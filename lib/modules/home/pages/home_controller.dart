@@ -29,12 +29,29 @@ abstract class HomeControllerBase with Store {
   Chat chat = Chat();
   Member member = Member();
 
+  @observable
+  String searchText = '';
+
+  @action
+  void setSearchText(String v) => searchText = v;
+
   @computed
   List<Chat> get chats {
     List<Chat> list = observableStream?.value?.toList() ?? <Chat>[];
 
     if (interest != 0) {
       list = list.where((chat) => chat.category == interest).toList();
+    }
+
+    // TODO: Implement clean search text
+    if (searchText.isNotEmpty) {
+      list = list.where((chat) {
+        if (chat.title.contains(searchText)) {
+          return true;
+        } else {
+          return false;
+        }
+      }).toList();
     }
 
     return list;
@@ -44,6 +61,7 @@ abstract class HomeControllerBase with Store {
   Future<void> getProfile() async {
     profile = await profileRepository.getProfile(profile!.email);
   }
+
   @action
   buildInterests() {
     interests.insert(0, 0);

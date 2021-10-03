@@ -17,6 +17,21 @@ mixin _$HomeController on HomeControllerBase, Store {
               name: 'HomeControllerBase.chats'))
           .value;
 
+  final _$searchTextAtom = Atom(name: 'HomeControllerBase.searchText');
+
+  @override
+  String get searchText {
+    _$searchTextAtom.reportRead();
+    return super.searchText;
+  }
+
+  @override
+  set searchText(String value) {
+    _$searchTextAtom.reportWrite(value, super.searchText, () {
+      super.searchText = value;
+    });
+  }
+
   final _$interestAtom = Atom(name: 'HomeControllerBase.interest');
 
   @override
@@ -58,6 +73,17 @@ mixin _$HomeController on HomeControllerBase, Store {
       ActionController(name: 'HomeControllerBase');
 
   @override
+  void setSearchText(String v) {
+    final _$actionInfo = _$HomeControllerBaseActionController.startAction(
+        name: 'HomeControllerBase.setSearchText');
+    try {
+      return super.setSearchText(v);
+    } finally {
+      _$HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic buildInterests() {
     final _$actionInfo = _$HomeControllerBaseActionController.startAction(
         name: 'HomeControllerBase.buildInterests');
@@ -82,6 +108,7 @@ mixin _$HomeController on HomeControllerBase, Store {
   @override
   String toString() {
     return '''
+searchText: ${searchText},
 interest: ${interest},
 chats: ${chats}
     ''';

@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 extension DateTimeExtension on DateTime {
-  String get formatHour => DateFormat('HH:mm').format(this);
+  String get hourAndMinute => DateFormat('HH:mm').format(this);
 }
 
 extension StringExtension on String {

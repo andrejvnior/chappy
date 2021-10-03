@@ -129,7 +129,6 @@ class _ChatPageState extends State<ChatPage> {
                     Expanded(
                       child: Observer(
                         builder: (_) => ChappyTextInput(
-                          controller: textEditingController,
                           onChanged: controller.private
                               ? controller.setSearch
                               : controller.setText,

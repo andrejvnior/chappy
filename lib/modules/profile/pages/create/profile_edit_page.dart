@@ -5,7 +5,6 @@ import 'package:projects/models/firebase_model.dart';
 import 'package:projects/modules/profile/models/profile.dart';
 import 'package:projects/modules/profile/pages/create/profile_create_controller.dart';
 import 'package:projects/modules/profile/pages/create/profile_create_page.dart';
-import 'package:projects/modules/profile/pages/read/profile_page.dart';
 import 'package:projects/widgets/chappy_avatar.dart';
 import 'package:projects/widgets/chappy_text_input.dart';
 

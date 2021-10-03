@@ -31,6 +31,9 @@ abstract class SignUpControllerBase with Store {
   @observable
   String confirmPassword = '';
 
+  @observable
+  bool agreed = false;
+
   @action
   void setEmail(String v) => email = v;
 
@@ -39,6 +42,9 @@ abstract class SignUpControllerBase with Store {
 
   @action
   void setConfirmPassword(String v) => confirmPassword = v;
+
+  @action
+  void toggleAgreed() => agreed = !agreed;
 
   @computed
   bool get emailValid => email.isNotEmpty && email.isEmail;

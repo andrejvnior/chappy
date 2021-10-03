@@ -8,8 +8,10 @@ import 'package:projects/modules/interests/pages/interest_page.dart';
 import 'package:projects/modules/profile/models/profile.dart';
 import 'package:projects/modules/profile/pages/read/profile_page.dart';
 import 'package:projects/themes/chappy_colors.dart';
+import 'package:projects/themes/chappy_texts.dart';
+import 'package:projects/widgets/chappy_app_bar.dart';
 import 'package:projects/widgets/chappy_avatar.dart';
-import 'package:projects/widgets/chappy_title.dart';
+import 'package:projects/widgets/chappy_text_input.dart';
 
 import 'home_controller.dart';
 
@@ -34,29 +36,54 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
-      appBar: AppBar(
-        leading: ChappyAvatar(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ProfilePage(profile: controller.profile!),
-            ),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(100),
+        child: ChappyAppBar(
+          leading: Row(
+            children: [
+              ChappyAvatar(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ProfilePage(profile: controller.profile!),
+                  ),
+                ),
+                image: controller.profile?.picture,
+              ),
+              const SizedBox(width: 16),
+            ],
           ),
-          image: controller.profile?.picture,
+          title: 'Chappy',
+          titleStyle: ChappyTexts.brand.apply(color: ChappyColors.primaryColor),
+          actions: [
+            // TODO: Change provisional icons
+            GestureDetector(
+              onTap: () => controller.logout().whenComplete(() =>
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignInPage()))),
+              child: const SizedBox(
+                width: 32,
+                height: 75,
+                child: Icon(Icons.access_time_sharp),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => controller.logout().whenComplete(() =>
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignInPage()))),
+              child: const SizedBox(
+                width: 32,
+                height: 75,
+                child: Icon(Icons.menu),
+              ),
+            ),
+          ],
         ),
-        title: const Text('Chappy'),
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            onPressed: () => controller.logout().whenComplete(() =>
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SignInPage()))),
-            icon: const Icon(Icons.exit_to_app),
-          )
-        ],
       ),
       bottomNavigationBar: Container(
         color: Colors.white,
@@ -86,55 +113,89 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 16),
-          TextButton(
-            onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => InterestPage(
-                    profile: controller.profile!,
-                    interests: controller.profile?.interests,
-                  ),
-                )),
-            child: const Text('Add interest'),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ChappyTextInput(
+              hintText: 'Search for chat rooms...',
+              suffixIcon: const Icon(
+                Icons.search,
+                color: ChappyColors.grey,
+              ),
+              borderRadius: BorderRadius.circular(50),
+            ),
           ),
           SizedBox(
               height: 36,
               child: Observer(
                 builder: (_) {
                   if (controller.interests.isEmpty) return Container();
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: controller.interests.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final title = interestList
-                          .firstWhere((interest) =>
-                              interest.id == controller.interests[index])
-                          .title;
-                      return Observer(
-                        builder: (_) => GestureDetector(
-                          onTap: () => controller
-                              .setInterest(controller.interests[index]),
-                          child: Container(
-                            margin: const EdgeInsets.only(right: 8),
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: controller.interests[index] ==
-                                      controller.interest
-                                  ? ChappyColors.primaryColor
-                                  : Colors.grey.shade400,
-                            ),
-                            child: Text(title ?? ''),
+
+                  List<Widget> bulletList = [];
+
+                  bulletList.add(
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InterestPage(
+                            profile: controller.profile!,
+                            interests: controller.profile?.interests,
                           ),
                         ),
-                      );
+                      ),
+                      child: Container(
+                        width: 36,
+                        margin: const EdgeInsets.only(left: 16, right: 8),
+                        decoration: BoxDecoration(
+                            color: ChappyColors.primaryColor,
+                            borderRadius: BorderRadius.circular(50)),
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  );
+                  for (final interest in controller.interests) {
+                    final title =
+                        interestList.firstWhere((i) => i.id == interest).title;
+                    bulletList.add(Observer(
+                      // TODO: Create widget called ChappyBullet
+                      builder: (_) => GestureDetector(
+                        onTap: () => controller.setInterest(interest),
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 8),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: interest == controller.interest
+                                ? ChappyColors.primaryColor
+                                : ChappyColors.grey300,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Text(
+                            (title ?? '').toUpperCase(),
+                            style: ChappyTexts.button2.apply(
+                              color: interest == controller.interest
+                                  ? Colors.white
+                                  : ChappyColors.primaryColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ));
+                  }
+                  bulletList.add(const SizedBox(width: 8));
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: bulletList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return bulletList[index];
                     },
                   );
                 },
               )),
-          const SizedBox(height: 16),
-          const ChappyTitle(title: 'Chats'),
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
           Expanded(
             child: Observer(builder: (_) {
               final list = controller.chats;

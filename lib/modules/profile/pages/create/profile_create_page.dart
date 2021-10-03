@@ -4,6 +4,7 @@ import 'package:projects/models/firebase_model.dart';
 import 'package:projects/modules/interests/pages/interest_page.dart';
 import 'package:projects/modules/profile/models/gender.dart';
 import 'package:projects/modules/profile/pages/create/profile_create_controller.dart';
+import 'package:projects/widgets/chappy_app_bar.dart';
 import 'package:projects/widgets/chappy_button.dart';
 import 'package:projects/widgets/chappy_text_input.dart';
 
@@ -28,6 +29,12 @@ class _ProfileCreatePageState extends State<ProfileCreatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(75), // Set this height
+        child: ChappyAppBar(
+          title: 'Personal Information',
+        ),
+      ),
       body: Observer(
         builder: (_) {
           return Container(

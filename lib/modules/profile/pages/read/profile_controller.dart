@@ -19,7 +19,6 @@ abstract class ProfileControllerBase with Store {
     observableFutureProfile = profileRepository.getProfiles().asObservable();
 
     profile = other ?? owner;
-    print('HWLLO');
   }
 
   @observable

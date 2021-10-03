@@ -4,7 +4,11 @@ import 'package:projects/models/firebase_model.dart';
 import 'package:projects/modules/auth/pages/signin/signin_page.dart';
 import 'package:projects/modules/auth/pages/signup/signup_controller.dart';
 import 'package:projects/modules/profile/pages/create/profile_create_page.dart';
+import 'package:projects/themes/chappy_colors.dart';
+import 'package:projects/themes/chappy_texts.dart';
+import 'package:projects/widgets/chappy_app_bar.dart';
 import 'package:projects/widgets/chappy_button.dart';
+import 'package:projects/widgets/chappy_squared_checkbox.dart';
 import 'package:projects/widgets/chappy_text_input.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -20,6 +24,12 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(75), // Set  Set this height
+        child: ChappyAppBar(
+          title: 'Sign Up',
+        ),
+      ),
       body: Observer(
         builder: (_) {
           if (controller.isLoading) {
@@ -40,13 +50,56 @@ class _SignUpPageState extends State<SignUpPage> {
                 ChappyTextInput(
                   hintText: 'Password',
                   onChanged: controller.setPassword,
-                  obscureText: true,
+                  isPassword: true,
                 ),
                 const SizedBox(height: 16),
                 ChappyTextInput(
                   hintText: 'Confirm password',
                   onChanged: controller.setConfirmPassword,
-                  obscureText: true,
+                  isPassword: true,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Observer(
+                      builder: (_) => ChappySquaredCheckbox(
+                        onPressed: () => controller.toggleAgreed(),
+                        isSelected: controller.agreed,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'I agree to the ',
+                      style: ChappyTexts.caption
+                          .apply(color: ChappyColors.grey900),
+                    ),
+                    GestureDetector(
+                      onTap: () {},
+                      child: Text(
+                        'Terms',
+                        style: ChappyTexts.caption
+                            .apply(color: ChappyColors.primaryColor),
+                      ),
+                    ),
+                    Text(
+                      ' and ',
+                      style: ChappyTexts.caption
+                          .apply(color: ChappyColors.grey900),
+                    ),
+                    GestureDetector(
+                      onTap: () {},
+                      child: Text(
+                        'Conditions',
+                        style: ChappyTexts.caption
+                            .apply(color: ChappyColors.primaryColor),
+                      ),
+                    ),
+                    Text(
+                      '.',
+                      style: ChappyTexts.caption
+                          .apply(color: ChappyColors.grey900),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16),
                 ChappyButton(
@@ -86,8 +139,33 @@ class _SignUpPageState extends State<SignUpPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => const SignInPage())),
-                  child: const Text('Already have an account? Sign In!'),
-                )
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Already have an account? ',
+                          style: ChappyTexts.caption
+                              .apply(color: ChappyColors.grey900),
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: Text(
+                            'Sign In',
+                            style: ChappyTexts.caption
+                                .apply(color: ChappyColors.primaryColor),
+                          ),
+                        ),
+                        Text(
+                          '!',
+                          style: ChappyTexts.caption
+                              .apply(color: ChappyColors.grey900),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           );

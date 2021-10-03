@@ -113,6 +113,21 @@ mixin _$SignUpController on SignUpControllerBase, Store {
     });
   }
 
+  final _$agreedAtom = Atom(name: 'SignUpControllerBase.agreed');
+
+  @override
+  bool get agreed {
+    _$agreedAtom.reportRead();
+    return super.agreed;
+  }
+
+  @override
+  set agreed(bool value) {
+    _$agreedAtom.reportWrite(value, super.agreed, () {
+      super.agreed = value;
+    });
+  }
+
   final _$SignUpControllerBaseActionController =
       ActionController(name: 'SignUpControllerBase');
 
@@ -172,6 +187,17 @@ mixin _$SignUpController on SignUpControllerBase, Store {
   }
 
   @override
+  void toggleAgreed() {
+    final _$actionInfo = _$SignUpControllerBaseActionController.startAction(
+        name: 'SignUpControllerBase.toggleAgreed');
+    try {
+      return super.toggleAgreed();
+    } finally {
+      _$SignUpControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 errorMessage: ${errorMessage},
@@ -179,6 +205,7 @@ isLoading: ${isLoading},
 email: ${email},
 password: ${password},
 confirmPassword: ${confirmPassword},
+agreed: ${agreed},
 emailValid: ${emailValid},
 passwordValid: ${passwordValid},
 confirmPasswordValid: ${confirmPasswordValid},

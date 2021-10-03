@@ -1,13 +1,17 @@
-
 import 'package:flutter/material.dart';
+import 'package:projects/core/extensions.dart';
 import 'package:projects/modules/chat/models/chat.dart';
 import 'package:projects/modules/profile/models/profile.dart';
+import 'package:projects/themes/chappy_colors.dart';
+import 'package:projects/themes/chappy_texts.dart';
 
 class ChatItem extends StatelessWidget {
-  final Chat chat; 
+  final Chat chat;
   final Profile? profile;
   final VoidCallback? onPressed;
-  const ChatItem({Key? key, required this.chat, this.profile, this.onPressed}) : super(key: key);
+
+  const ChatItem({Key? key, required this.chat, this.profile, this.onPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,14 +19,22 @@ class ChatItem extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             border: Border(
                 bottom: BorderSide(
           width: 1,
-          color: Colors.grey.shade400,
+          color: ChappyColors.grey100,
         ))),
         child: Row(
           children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                  color: ChappyColors.grey300,
+                  borderRadius: BorderRadius.circular(8)),
+            ),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,29 +44,18 @@ class ChatItem extends StatelessWidget {
                       Expanded(
                         child: Text(
                           chat.title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: ChappyTexts.subtitle1,
                         ),
                       ),
-                      Text(
-                        chat.createdAt.toString(),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      Text(chat.createdAt.hourAndMinute.toString(),
+                          style: ChappyTexts.caption
+                              .apply(color: ChappyColors.grey900)),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(chat.description),
+                  Text(chat.description, style: ChappyTexts.caption),
                 ],
               ),
-            ),
-            const SizedBox(width: 16),
-            Icon(
-              Icons.arrow_forward_ios_outlined,
-              size: 20,
-              color: Colors.grey.shade400,
             ),
           ],
         ),

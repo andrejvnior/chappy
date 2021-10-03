@@ -27,8 +27,8 @@ class ChappyAvatar extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: large ? 100 : 36,
-        height: large ? 100 : 36,
+        width: large ? 100 : 32,
+        height: large ? 100 : 32,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: builtImage(),

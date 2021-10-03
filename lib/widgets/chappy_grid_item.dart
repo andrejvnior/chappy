@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projects/themes/chappy_colors.dart';
+import 'package:projects/themes/chappy_texts.dart';
 
 class ChappyGridItem extends StatelessWidget {
   final String title;
@@ -17,24 +18,30 @@ class ChappyGridItem extends StatelessWidget {
       child: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: isSelected ? Colors.grey : ChappyColors.primaryColor,
+            color: ChappyColors.primaryColor,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Stack(
+            alignment: Alignment.bottomLeft,
             children: [
               if (isSelected)
                 Positioned(
                   top: 0,
                   right: 0,
                   child: Container(
-                    width: 16,
-                    height: 16,
+                    width: 22,
+                    height: 22,
                     decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(50)),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(color: ChappyColors.primaryColor),
+                    ),
                   ),
                 ),
-              Text(title),
+              Text(
+                title,
+                style: ChappyTexts.subtitle1.apply(color: Colors.white),
+              ),
             ],
           )),
     );

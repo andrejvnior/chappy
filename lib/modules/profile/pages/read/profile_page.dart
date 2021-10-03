@@ -26,7 +26,6 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     controller = ProfileController(widget.profile, other: widget.other);
 
-    print('HWLLO');
     super.initState();
   }
 

@@ -22,7 +22,7 @@ class MessageItem extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(
-                message.createdAt.formatHour,
+                message.createdAt.hourAndMinute,
                 style: const TextStyle(
                   color: Colors.black54,
                 ),
@@ -65,7 +65,7 @@ class MessageItem extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                message.createdAt.formatHour,
+                message.createdAt.hourAndMinute,
                 style: const TextStyle(
                   color: Colors.black54,
                 ),

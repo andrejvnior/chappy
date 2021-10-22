@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:projects/core/extensions.dart';
 import 'package:projects/modules/chat/models/chat.dart';
+import 'package:projects/modules/chat/models/content_item.dart';
 import 'package:projects/modules/chat/page/create/chat_create_page.dart';
+import 'package:projects/modules/chat/page/read/widgets/divider_item.dart';
+import 'package:projects/modules/chat/page/read/widgets/message_divider.dart';
 import 'package:projects/modules/chat/page/read/widgets/message_item.dart';
 import 'package:projects/modules/home/pages/home_page.dart';
 import 'package:projects/modules/profile/models/profile.dart';
 import 'package:projects/modules/profile/pages/read/profile_page.dart';
 import 'package:projects/themes/chappy_colors.dart';
+import 'package:projects/themes/chappy_icons.dart';
+import 'package:projects/widgets/chappy_avatar.dart';
 import 'package:projects/widgets/chappy_button.dart';
+import 'package:projects/widgets/chappy_icon.dart';
 import 'package:projects/widgets/chappy_list_tile.dart';
 import 'package:projects/widgets/chappy_text_input.dart';
 import 'package:projects/widgets/chappy_title.dart';
@@ -27,6 +34,9 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   late ChatController controller;
   final textEditingController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final list = <ContentItem>[];
 
   @override
   void initState() {
@@ -36,9 +46,107 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Chat'),
+    return SafeArea(
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: PreferredSize(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              children: [
+                ChappyIcon(
+                  onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                  icon: ChappyIcons.users,
+                  color: ChappyColors.primaryColor,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: SizedBox(
+                    height: 32,
+                    child: Stack(
+                      children: [
+                        Observer(
+                          builder: (_) {
+                            final profiles = controller.profiles;
+
+                            if (profiles.isEmpty) return Container();
+
+                            return ListView.builder(
+                                itemCount: profiles.length,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return ChappyAvatar(
+                                    onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ProfilePage(profile: profiles[index]),
+                                      ),
+                                    ),
+                                    image: profiles[index].picture,
+                                    margin: const EdgeInsets.only(right: 4),
+                                  );
+                                });
+                          },
+                        ),
+                        Positioned(
+                          left: 0,
+                          top: 0,
+                          bottom: 0,
+                          child: Row(
+                            children: [
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                width: 16,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.white,
+                                      Colors.white.withOpacity(0),
+                                    ],
+                                    stops: const [0, 0.95],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          bottom: 0,
+                          child: Row(
+                            children: [
+                              Container(
+                                alignment: Alignment.centerRight,
+                                width: 16,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.white.withOpacity(0),
+                                      Colors.white,
+                                    ],
+                                    stops: const [0, 0.95],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                ChappyIcon(
+                  onPressed: () {},
+                  icon: ChappyIcons.search,
+                  color: ChappyColors.primaryColor,
+                ),
+              ],
+            ),
+          ),
+          preferredSize: const Size.fromHeight(80.0),
         ),
         body: Column(
           children: [
@@ -57,20 +165,95 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                     )
                   : Observer(builder: (_) {
-                      final list = controller.messages;
-                      if (list.isEmpty) {
+                      final profiles = controller.profiles;
+
+                      final messages = controller.messages;
+
+                      if (messages.isEmpty) {
                         return const Center(
                           child: Text('No messages yet.'),
                         );
                       }
+
+                      list.clear();
+
+                      for (final message in messages) {
+                        list.add(MessageItem(
+                          message: message,
+                          profile: profiles.firstWhere(
+                              (profile) => profile.uuid == message.createdBy),
+                          isProfile: message.createdBy == widget.profile?.uuid,
+                          position: MessagePosition.middle,
+                        ));
+                      }
+
+                      for (int index = 0; index < messages.length; index++) {
+                        final nextItem =
+                            list[index + 1 < list.length ? index + 1 : index];
+
+                        final prevItem =
+                            list[index - 1 >= 0 ? index - 1 : index];
+
+                        final isLastMessage =
+                            list[index].createdBy != nextItem.createdBy;
+
+                        final isFirstMessage =
+                            list[index].createdBy != prevItem.createdBy;
+
+                        if (isLastMessage) {
+                          list[index] = MessageItem(
+                            message: messages.firstWhere((message) =>
+                                message.createdAt == list[index].createdAt),
+                            profile: profiles.firstWhere((profile) =>
+                                profile.uuid == list[index].createdBy),
+                            isProfile:
+                                list[index].createdBy == widget.profile?.uuid,
+                            position: MessagePosition.first,
+                          );
+                        }
+
+                        if (isFirstMessage) {
+                          list[index] = MessageItem(
+                            message: messages.firstWhere((message) =>
+                                message.createdAt == list[index].createdAt),
+                            profile: profiles.firstWhere((profile) =>
+                                profile.uuid == list[index].createdBy),
+                            isProfile:
+                                list[index].createdBy == widget.profile?.uuid,
+                            position: MessagePosition.last,
+                          );
+                        }
+
+                        if (isFirstMessage && isLastMessage) {
+                          list[index] = MessageItem(
+                            message: messages.firstWhere((message) =>
+                                message.createdAt == list[index].createdAt),
+                            profile: profiles.firstWhere((profile) =>
+                                profile.uuid == list[index].createdBy),
+                            isProfile:
+                                list[index].createdBy == widget.profile?.uuid,
+                            position: MessagePosition.middle,
+                            isSolo: true,
+                          );
+                        }
+
+                        list[0] = MessageItem(
+                          message: messages.firstWhere((message) =>
+                              message.createdAt == list[0].createdAt),
+                          profile: profiles.firstWhere((profile) =>
+                              profile.uuid == list[index].createdBy),
+                          isProfile: list[0].createdBy == widget.profile?.uuid,
+                          position: MessagePosition.last,
+                        );
+                      }
+
+                      list.sort((b, a) => a.compareTo(b));
+
                       return ListView.builder(
                           reverse: true,
                           itemCount: list.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return MessageItem(
-                              message: list[index],
-                              profile: widget.profile,
-                            );
+                            return list[index];
                           });
                     }),
             ),
@@ -140,9 +323,10 @@ class _ChatPageState extends State<ChatPage> {
                       style: TextButton.styleFrom(
                         primary: ChappyColors.primaryColor,
                       ),
-                      onPressed: () => controller
-                          .sendMessage()
-                          .whenComplete(() => textEditingController.clear()),
+                      onPressed: () {
+                        controller.sendMessage();
+                        textEditingController.clear();
+                      },
                       child: const Text('Enviar'),
                     ),
                   ],
@@ -172,12 +356,13 @@ class _ChatPageState extends State<ChatPage> {
                       itemBuilder: (BuildContext context, int index) {
                         // TODO: Substitute image
                         return ChappyListTile(
-                          onPressed: (){
+                          onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (_) => ProfilePage(
-                                    profile: widget.profile!, other: list[index]),
+                                    profile: widget.profile!,
+                                    other: list[index]),
                               ),
                             );
                           },
@@ -204,6 +389,8 @@ class _ChatPageState extends State<ChatPage> {
               ],
             );
           }),
-        ));
+        ),
+      ),
+    );
   }
 }

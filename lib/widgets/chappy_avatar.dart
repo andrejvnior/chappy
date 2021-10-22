@@ -7,19 +7,26 @@ class ChappyAvatar extends StatelessWidget {
   final String? image;
   final VoidCallback? onPressed;
   final File? file;
+  final EdgeInsetsGeometry? margin;
 
-  const ChappyAvatar(
-      {Key? key, this.large = false, this.image, this.onPressed, this.file})
-      : super(key: key);
+  const ChappyAvatar({
+    Key? key,
+    this.large = false,
+    this.image,
+    this.onPressed,
+    this.file,
+    this.margin,
+  }) : super(key: key);
 
   builtImage() {
-    if (image != null && image!.isNotEmpty) {
-      return NetworkImage(image!);
-    } else if (file != null && file!.path.isNotEmpty) {
-      return FileImage(file!);
-    } else {
-      return const AssetImage('images/profile.jpg');
-    }
+    return const AssetImage('images/profile.jpg');
+    // if (image != null && image!.isNotEmpty) {
+    //   return NetworkImage(image!);
+    // } else if (file != null && file!.path.isNotEmpty) {
+    //   return FileImage(file!);
+    // } else {
+    //   return const AssetImage('images/profile.jpg');
+    // }
   }
 
   @override
@@ -29,6 +36,7 @@ class ChappyAvatar extends StatelessWidget {
       child: Container(
         width: large ? 100 : 32,
         height: large ? 100 : 32,
+        margin: margin ?? const EdgeInsets.all(0),
         decoration: BoxDecoration(
           image: DecorationImage(
             image: builtImage(),

@@ -133,7 +133,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         builder: (context) =>
                             ProfileEditPage(profile: widget.profile),
                       ),
-                    ).then((value) => controller.setProfile(value)),
+                    ).then((value) => controller.setProfile(
+
+                        value)),
                     child: const Text('Edit Profile'),
                   ),
                 ],

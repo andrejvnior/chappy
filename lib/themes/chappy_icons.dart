@@ -5,4 +5,5 @@ class ChappyIcons {
   static const mention = 'images/icons/mention.svg';
   static const message = 'images/icons/message.svg';
   static const search = 'images/icons/search.svg';
+  static const users = 'images/icons/users.svg';
 }

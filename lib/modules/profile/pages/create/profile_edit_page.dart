@@ -74,7 +74,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 Observer(
                   builder: (_) {
                     return ChappyTextInput(
-                      initialValue: controller.profile?.nickname,
                       hintText: 'Nickname',
                       onChanged: controller.setNickname,
                       errorMessage: controller.errorMessage,
@@ -83,7 +82,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 ),
                 const SizedBox(height: 16),
                 ChappyTextInput(
-                  initialValue: controller.profile?.bio,
                   hintText: controller.bio,
                   onChanged: controller.setBio,
                 ),

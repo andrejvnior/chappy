@@ -12,6 +12,32 @@ extension DateTimeExtension on DateTime {
       dateTime.second == second &&
       dateTime.millisecond == millisecond &&
       dateTime.minute == microsecond;
+
+  String get abbrDate {
+    int time = DateTime.now().difference(this).inSeconds;
+    const minute = 60;
+    const hour = 3600;
+    const day = 86400;
+
+    if (time == 0) {
+      return 'Now';
+    } else if (time < 59) {
+      return '${time}s';
+    } else if (time >= minute && time < hour) {
+      time = DateTime.now().difference(this).inMinutes;
+      return '${time}m';
+    } else if (time >= hour && time < day) {
+      time = DateTime.now().difference(this).inHours;
+      return '${time}h';
+    } else if (time >= day) {
+      time = DateTime.now().difference(this).inDays;
+      return '${time}d';
+    }
+
+    return simpleDate;
+  }
+
+  String get simpleDate => DateFormat('dd/MM/yyyy').format(this);
 }
 
 extension StringExtension on String {

@@ -4,8 +4,9 @@ import 'package:projects/core/extensions.dart';
 import 'package:projects/modules/chat/models/chat.dart';
 import 'package:projects/modules/chat/models/content_item.dart';
 import 'package:projects/modules/chat/page/create/chat_create_page.dart';
+import 'package:projects/modules/chat/page/read/components/chat_input.dart';
 import 'package:projects/modules/chat/page/read/widgets/divider_item.dart';
-import 'package:projects/modules/chat/page/read/widgets/message_divider.dart';
+import 'package:projects/modules/chat/page/read/widgets/message_divider_item.dart';
 import 'package:projects/modules/chat/page/read/widgets/message_item.dart';
 import 'package:projects/modules/home/pages/home_page.dart';
 import 'package:projects/modules/profile/models/profile.dart';
@@ -37,6 +38,7 @@ class _ChatPageState extends State<ChatPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final list = <ContentItem>[];
+  final dividers = <ContentItem>[];
 
   @override
   void initState() {
@@ -79,7 +81,8 @@ class _ChatPageState extends State<ChatPage> {
                                     onPressed: () => Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => ProfilePage(profile: profiles[index]),
+                                        builder: (context) => ProfilePage(
+                                            profile: profiles[index]),
                                       ),
                                     ),
                                     image: profiles[index].picture,
@@ -247,6 +250,16 @@ class _ChatPageState extends State<ChatPage> {
                         );
                       }
 
+                      for (final item in list) {
+                        if (dividers.any((d) =>
+                            d.createdAt.isSameMinuteAs(item.createdAt))) {
+                          dividers.add(MessageDividerItem(
+                            item.createdAt,
+                          ));
+                        }
+                      }
+
+                      list.addAll(dividers);
                       list.sort((b, a) => a.compareTo(b));
 
                       return ListView.builder(
@@ -304,33 +317,15 @@ class _ChatPageState extends State<ChatPage> {
                 return Container();
               },
             ),
-            Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Observer(
-                        builder: (_) => ChappyTextInput(
-                          onChanged: controller.private
-                              ? controller.setSearch
-                              : controller.setText,
-                          hintText: 'Send message',
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        primary: ChappyColors.primaryColor,
-                      ),
-                      onPressed: () {
-                        controller.sendMessage();
-                        textEditingController.clear();
-                      },
-                      child: const Text('Enviar'),
-                    ),
-                  ],
-                )),
+            ChatInput(
+              onSend: () {
+                controller.sendMessage();
+                textEditingController.clear();
+              },
+              onChanged: controller.private
+                  ? controller.setSearch
+                  : controller.setText,
+            ),
           ],
         ),
         drawer: Drawer(

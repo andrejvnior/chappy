@@ -93,7 +93,7 @@ class MessageItem extends ContentItem {
                           child: Container(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              message.createdAt.hourAndMinute,
+                              message.createdAt.abbrDate,
                               style: const TextStyle(
                                 color: Colors.black54,
                               ),
@@ -157,7 +157,7 @@ class MessageItem extends ContentItem {
                           child: Container(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              message.createdAt.hourAndMinute,
+                              message.createdAt.abbrDate,
                               style: ChappyTexts.caption.apply(
                                 color: ChappyColors.grey900,
                               ),

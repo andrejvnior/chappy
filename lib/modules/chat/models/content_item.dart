@@ -4,7 +4,6 @@ abstract class ContentItem extends StatelessWidget{
   DateTime get createdAt;
   String get createdBy;
   int get order;
-  bool get isMessage;
 
   int compareTo(ContentItem other){
     if(createdAt.isAtSameMomentAs(other.createdAt)){
@@ -13,9 +12,5 @@ abstract class ContentItem extends StatelessWidget{
     } else{
       return createdAt.compareTo(other.createdAt);
     }
-  }
-
-  bool isSameOwner(ContentItem other){
-    return createdBy == other.createdBy;
   }
 }

@@ -32,7 +32,7 @@ class MessageItem extends ContentItem {
   DateTime get createdAt => message.createdAt;
 
   @override
-  int get order => 1;
+  int get order => 0;
 
   @override
   bool get isMessage => true;
@@ -58,10 +58,17 @@ class MessageItem extends ContentItem {
       }
     }
 
-    return Padding(
+    return Container(
         padding: const EdgeInsets.symmetric(horizontal: 8),
+        margin: EdgeInsets.only(
+            bottom: position == MessagePosition.first ||
+                    position == MessagePosition.middle
+                ? 2
+                : 16),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment:
+              isProfile ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
             if (!isProfile)
               Container(
@@ -80,99 +87,68 @@ class MessageItem extends ContentItem {
                       )
                     : Container(),
               ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: isProfile
-                    ? CrossAxisAlignment.end
-                    : CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      if (isProfile) ...[
-                        Expanded(
-                          child: Container(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              message.createdAt.abbrDate,
-                              style: const TextStyle(
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 4,
-                          height: 4,
-                          margin: const EdgeInsets.symmetric(horizontal: 6),
-                          decoration: const BoxDecoration(
-                            color: ChappyColors.grey,
-                          ),
-                        ),
-                      ],
-                      Align(
-                        alignment: isProfile
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Container(
-                            padding: const EdgeInsets.all(12),
-                            constraints: BoxConstraints(
-                              maxWidth:
-                                  MediaQuery.of(context).size.width * 0.75,
-                            ),
-                            decoration: BoxDecoration(
-                                color: isProfile
-                                    ? ChappyColors.primaryColor
-                                    : ChappyColors.grey100,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: topLeft,
-                                  topRight: topRight,
-                                  bottomLeft: bottomLeft,
-                                  bottomRight: bottomRight,
-                                )),
-                            child: Column(
-                              crossAxisAlignment: isProfile
-                                  ? CrossAxisAlignment.end
-                                  : CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  message.content,
-                                  style: ChappyTexts.body2.apply(
-                                      color: isProfile
-                                          ? Colors.white
-                                          : Colors.black),
-                                ),
-                              ],
-                            )),
-                      ),
-                      if (!isProfile) ...[
-                        Container(
-                          width: 4,
-                          height: 4,
-                          margin: const EdgeInsets.symmetric(horizontal: 6),
-                          decoration: const BoxDecoration(
-                            color: ChappyColors.grey,
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              message.createdAt.abbrDate,
-                              style: ChappyTexts.caption.apply(
-                                color: ChappyColors.grey900,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (position == MessagePosition.first)
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Text(
+                      profile.nickname,
+                      style: ChappyTexts.caption
+                          .apply(color: ChappyColors.primaryColor),
+                    ),
                   ),
-                  const SizedBox(height: 1),
-                  if (position == MessagePosition.last || isSolo)
-                    const SizedBox(height: 14),
-                ],
-              ),
-            ),
+                Align(
+                  alignment:
+                      isProfile ? Alignment.centerRight : Alignment.centerLeft,
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.85,
+                    ),
+                    decoration: BoxDecoration(
+                        color: isProfile
+                            ? ChappyColors.primaryColor
+                            : ChappyColors.grey900,
+                        borderRadius: BorderRadius.only(
+                          topLeft: topLeft,
+                          topRight: topRight,
+                          bottomLeft: bottomLeft,
+                          bottomRight: bottomRight,
+                        )),
+                    child: RichText(
+                      text: TextSpan(
+                          text: message.createdAt.abbrDate,
+                          style: const TextStyle(
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w900,
+                            fontSize: 14,
+                            letterSpacing: 0.25,
+                            color: ChappyColors.primaryColor,
+                          ),
+                          children: [
+                            const WidgetSpan(
+                              child: SizedBox(
+                                width: 4,
+                              ),
+                            ),
+                            TextSpan(
+                              text: position.toString() +
+                                  " " +
+                                  isSolo.toString() +
+                                  " " +
+                                  createdBy,
+                              style: ChappyTexts.body2.apply(
+                                color: isProfile ? Colors.white : Colors.black,
+                              ),
+                            ),
+                          ]),
+                    ),
+                  ),
+                ),
+              ],
+            )
           ],
         ));
   }

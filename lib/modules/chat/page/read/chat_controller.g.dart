@@ -30,12 +30,20 @@ mixin _$ChatController on ChatControllerBase, Store {
       (_$membersComputed ??= Computed<List<Member>>(() => super.members,
               name: 'ChatControllerBase.members'))
           .value;
-  Computed<bool>? _$privateComputed;
+  Computed<String>? _$searchComputed;
 
   @override
-  bool get private => (_$privateComputed ??= Computed<bool>(() => super.private,
-          name: 'ChatControllerBase.private'))
-      .value;
+  String get search =>
+      (_$searchComputed ??= Computed<String>(() => super.search,
+              name: 'ChatControllerBase.search'))
+          .value;
+  Computed<bool>? _$isDirectComputed;
+
+  @override
+  bool get isDirect =>
+      (_$isDirectComputed ??= Computed<bool>(() => super.isDirect,
+              name: 'ChatControllerBase.isDirect'))
+          .value;
 
   final _$isLoadingAtom = Atom(name: 'ChatControllerBase.isLoading');
 
@@ -67,18 +75,33 @@ mixin _$ChatController on ChatControllerBase, Store {
     });
   }
 
-  final _$searchAtom = Atom(name: 'ChatControllerBase.search');
+  final _$recipientAtom = Atom(name: 'ChatControllerBase.recipient');
 
   @override
-  String get search {
-    _$searchAtom.reportRead();
-    return super.search;
+  String get recipient {
+    _$recipientAtom.reportRead();
+    return super.recipient;
   }
 
   @override
-  set search(String value) {
-    _$searchAtom.reportWrite(value, super.search, () {
-      super.search = value;
+  set recipient(String value) {
+    _$recipientAtom.reportWrite(value, super.recipient, () {
+      super.recipient = value;
+    });
+  }
+
+  final _$isPrivateAtom = Atom(name: 'ChatControllerBase.isPrivate');
+
+  @override
+  bool get isPrivate {
+    _$isPrivateAtom.reportRead();
+    return super.isPrivate;
+  }
+
+  @override
+  set isPrivate(bool value) {
+    _$isPrivateAtom.reportWrite(value, super.isPrivate, () {
+      super.isPrivate = value;
     });
   }
 
@@ -112,11 +135,22 @@ mixin _$ChatController on ChatControllerBase, Store {
   }
 
   @override
-  void setSearch(String v) {
+  void setRecipient(String v) {
     final _$actionInfo = _$ChatControllerBaseActionController.startAction(
-        name: 'ChatControllerBase.setSearch');
+        name: 'ChatControllerBase.setRecipient');
     try {
-      return super.setSearch(v);
+      return super.setRecipient(v);
+    } finally {
+      _$ChatControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void togglePrivate() {
+    final _$actionInfo = _$ChatControllerBaseActionController.startAction(
+        name: 'ChatControllerBase.togglePrivate');
+    try {
+      return super.togglePrivate();
     } finally {
       _$ChatControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -127,11 +161,13 @@ mixin _$ChatController on ChatControllerBase, Store {
     return '''
 isLoading: ${isLoading},
 text: ${text},
-search: ${search},
+recipient: ${recipient},
+isPrivate: ${isPrivate},
 profiles: ${profiles},
 messages: ${messages},
 members: ${members},
-private: ${private}
+search: ${search},
+isDirect: ${isDirect}
     ''';
   }
 }

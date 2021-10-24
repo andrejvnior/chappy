@@ -4,6 +4,7 @@ abstract class ContentItem extends StatelessWidget{
   DateTime get createdAt;
   String get createdBy;
   int get order;
+  bool get isMessage;
 
   int compareTo(ContentItem other){
     if(createdAt.isAtSameMomentAs(other.createdAt)){

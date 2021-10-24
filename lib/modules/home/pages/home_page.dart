@@ -136,17 +136,15 @@ class _HomePageState extends State<HomePage> {
         children: [
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Observer(
-                builder: (_) => ChappyTextInput(
-                  hintText: 'Search for chat rooms...',
-                  suffixIcon: const ChappyIcon(
-                    icon: ChappyIcons.search,
-                    color: ChappyColors.grey,
-                  ),
-                  onChanged: controller.setSearchText,
-                  borderRadius: BorderRadius.circular(50),
+              child: ChappyTextInput(
+                hintText: 'Search for chat rooms...',
+                suffixIcon: const ChappyIcon(
+                  icon: ChappyIcons.search,
+                  color: ChappyColors.grey,
                 ),
-              )),
+                onChanged: controller.setSearchText,
+                borderRadius: BorderRadius.circular(50),
+              ),),
           const SizedBox(height: 16),
           SizedBox(
               height: 36,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:projects/models/firebase_model.dart';
 import 'package:projects/modules/profile/models/profile.dart';
 import 'package:projects/modules/profile/pages/create/profile_create_controller.dart';

@@ -73,4 +73,11 @@ class ChappyTexts {
     fontSize: 19,
     letterSpacing: 0.15,
   );
+
+  static const messageNickname = TextStyle(
+    fontFamily: 'Roboto',
+    fontWeight: FontWeight.w900,
+    fontSize: 14,
+    letterSpacing: 0.25,
+  );
 }

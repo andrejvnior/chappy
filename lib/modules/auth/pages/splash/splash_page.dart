@@ -2,10 +2,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:projects/modules/auth/pages/signup/signup_page.dart';
 import 'package:projects/modules/home/pages/home_page.dart';
+import 'package:projects/modules/profile/models/profile.dart';
 import 'package:projects/modules/profile/pages/create/profile_create_page.dart';
 import 'package:projects/themes/chappy_colors.dart';
 
 import 'splash_controller.dart';
+
+// TODO: Modify this later
+late Profile user;
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -26,6 +30,8 @@ class _SplashPageState extends State<SplashPage> {
   navigateUser() async {
     if (controller.isLogged) {
       final profile = await controller.getProfile();
+
+      user = profile!;
 
       if (profile == null) {
         Timer(

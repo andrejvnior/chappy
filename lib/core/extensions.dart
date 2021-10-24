@@ -8,10 +8,7 @@ extension DateTimeExtension on DateTime {
       dateTime.month == month &&
       dateTime.day == day &&
       dateTime.hour == hour &&
-      dateTime.minute == minute &&
-      dateTime.second == second &&
-      dateTime.millisecond == millisecond &&
-      dateTime.minute == microsecond;
+      dateTime.minute == minute;
 
   String get abbrDate {
     int time = DateTime.now().difference(this).inSeconds;
@@ -21,7 +18,7 @@ extension DateTimeExtension on DateTime {
 
     if (time == 0) {
       return 'Now';
-    } else if (time < 59) {
+    } else if (time < minute) {
       return '${time}s';
     } else if (time >= minute && time < hour) {
       time = DateTime.now().difference(this).inMinutes;
@@ -44,4 +41,5 @@ extension StringExtension on String {
   bool get isEmail => RegExp(
           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
       .hasMatch(this);
+
 }

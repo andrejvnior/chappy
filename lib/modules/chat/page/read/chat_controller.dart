@@ -30,7 +30,12 @@ abstract class ChatControllerBase with Store {
   String text = '';
 
   @action
-  void setText(String v) => text = v;
+  void setText(String v) {
+    text = v;
+    if (text.isEmpty) {
+      recipient = '';
+    }
+  }
 
   ChatRepository chatRepository = ChatRepository();
   ProfileRepository profileRepository = ProfileRepository();
@@ -58,13 +63,19 @@ abstract class ChatControllerBase with Store {
       }
     }
 
-    if (private && search.isNotEmpty) {
+    if (search.isNotEmpty) {
       final replaced = search.replaceFirst(RegExp('@'), '');
-      profiles =
-          profiles.where((profile) => profile.name.contains(replaced)).toList();
+      return profiles.where((profile) {
+        if (profile.name.contains(replaced)) {
+          return true;
+        } else if (profile.nickname.contains(replaced)) {
+          return true;
+        }
+        return false;
+      }).toList();
+    } else {
+      return profiles;
     }
-
-    return profiles;
   }
 
   @computed
@@ -83,6 +94,7 @@ abstract class ChatControllerBase with Store {
     message = Message(
       content: text,
       createdBy: profile?.uuid ?? '',
+      recipients: mentions,
     );
     await chatRepository
         .sendMessage(message, chat!)
@@ -108,20 +120,40 @@ abstract class ChatControllerBase with Store {
     await chatRepository.exit(member, chat!).whenComplete(() => setText(''));
   }
 
+  late List<String> mentions = [];
+
   @computed
-  bool get private {
-    return text.isNotEmpty && text[0] == '@';
+  String get search {
+    if (text.isNotEmpty) {
+      final words = text.split(' ');
+
+      mentions =
+          words.where((word) => word.isNotEmpty && word[0] == '@').toList();
+
+      final isMention = words.last.contains('@') && words.last != '';
+
+      if (isMention && mentions.last.isNotEmpty) {
+        return mentions.last;
+      }
+    }
+    return '';
   }
 
   @observable
-  String search = '';
+  String recipient = '';
 
   @action
-  void setSearch(String v) {
-    search = v;
-
-    if (search.isEmpty) {
-      text = '';
-    }
+  void setRecipient(String v) {
+    recipient = v;
+    text = text + recipient + ' ';
   }
+
+  @computed
+  bool get isDirect => recipient.isNotEmpty;
+
+  @observable
+  bool isPrivate = false;
+
+  @action
+  void togglePrivate() => isPrivate = !isPrivate;
 }

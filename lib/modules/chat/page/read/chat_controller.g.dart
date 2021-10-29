@@ -37,13 +37,6 @@ mixin _$ChatController on ChatControllerBase, Store {
       (_$searchComputed ??= Computed<String>(() => super.search,
               name: 'ChatControllerBase.search'))
           .value;
-  Computed<bool>? _$isDirectComputed;
-
-  @override
-  bool get isDirect =>
-      (_$isDirectComputed ??= Computed<bool>(() => super.isDirect,
-              name: 'ChatControllerBase.isDirect'))
-          .value;
 
   final _$isLoadingAtom = Atom(name: 'ChatControllerBase.isLoading');
 
@@ -166,8 +159,7 @@ isPrivate: ${isPrivate},
 profiles: ${profiles},
 messages: ${messages},
 members: ${members},
-search: ${search},
-isDirect: ${isDirect}
+search: ${search}
     ''';
   }
 }

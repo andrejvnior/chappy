@@ -73,9 +73,8 @@ abstract class ChatControllerBase with Store {
         }
         return false;
       }).toList();
-    } else {
-      return profiles;
     }
+    return profiles;
   }
 
   @computed
@@ -94,11 +93,15 @@ abstract class ChatControllerBase with Store {
     message = Message(
       content: text,
       createdBy: profile?.uuid ?? '',
-      recipients: mentions,
+      recipients: recipients,
+      isPrivate: isPrivate,
     );
     await chatRepository
         .sendMessage(message, chat!)
         .whenComplete(() => setText(''));
+
+    recipients.clear();
+    isPrivate = false;
   }
 
   @computed
@@ -120,14 +123,14 @@ abstract class ChatControllerBase with Store {
     await chatRepository.exit(member, chat!).whenComplete(() => setText(''));
   }
 
-  late List<String> mentions = [];
+  late List<String> recipients = [];
 
   @computed
   String get search {
     if (text.isNotEmpty) {
       final words = text.split(' ');
 
-      mentions =
+      final mentions =
           words.where((word) => word.isNotEmpty && word[0] == '@').toList();
 
       final isMention = words.last.contains('@') && words.last != '';
@@ -145,11 +148,13 @@ abstract class ChatControllerBase with Store {
   @action
   void setRecipient(String v) {
     recipient = v;
-    text = text + recipient + ' ';
-  }
 
-  @computed
-  bool get isDirect => recipient.isNotEmpty;
+    recipients.add(recipient);
+
+    final nickname =
+        profiles.firstWhere((profile) => profile.uuid == recipient).nickname;
+    text = text + nickname + ' ';
+  }
 
   @observable
   bool isPrivate = false;

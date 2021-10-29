@@ -33,7 +33,7 @@ class _SplashPageState extends State<SplashPage> {
 
       user = profile!;
 
-      if (profile == null) {
+      if (user.email.isEmpty && profile.name.isEmpty) {
         Timer(
           const Duration(seconds: 3),
           () => Navigator.of(context).pushAndRemoveUntil(

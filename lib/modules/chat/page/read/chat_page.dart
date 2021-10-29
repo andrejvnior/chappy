@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:projects/modules/auth/pages/splash/splash_page.dart';
 import 'package:projects/modules/chat/models/chat.dart';
 import 'package:projects/modules/chat/models/content_item.dart';
 import 'package:projects/modules/chat/page/create/chat_create_page.dart';
@@ -32,7 +33,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   late ChatController controller;
-  final textEditingController = TextEditingController();
+  final TextEditingController textEditingController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final list = <ContentItem>[];
@@ -79,7 +80,11 @@ class _ChatPageState extends State<ChatPage> {
                               builder: (_) {
                                 final profiles = controller.profiles;
 
-                                if (profiles.isEmpty) return Container();
+                                if (profiles.isEmpty) {
+                                  return const Center(
+                                    child: Text('Nobody here yet.'),
+                                  );
+                                }
 
                                 return ListView.builder(
                                     itemCount: profiles.length,
@@ -160,182 +165,182 @@ class _ChatPageState extends State<ChatPage> {
               },
             ),
           ),
-          preferredSize: const Size.fromHeight(80.0),
+          preferredSize: const Size.fromHeight(80),
         ),
-        body: Column(children: [
-          Observer(
-            builder: (_) {
-              final profiles = controller.profiles;
+        body: Column(
+          children: [
+            Observer(
+              builder: (_) {
+                final messages = controller.messages;
+                final profiles = controller.profiles;
 
-              if (controller.search.isNotEmpty &&
-                  controller.profiles.isNotEmpty) {
+                if (controller.search.isNotEmpty) {
+                  if (profiles.isEmpty) {
+                    return const Expanded(
+                      child: Text('Nobody here yet.'),
+                    );
+                  }
+
+                  return Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 16),
+                        const ChappyTitle(
+                          title: 'Search profile',
+                        ),
+                        const SizedBox(height: 16),
+                        Expanded(
+                          child: ListView.builder(
+                              itemCount: profiles.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ChappyListTile(
+                                  onPressed: () => controller
+                                      .setRecipient(profiles[index].uuid),
+                                  leading: Image.network(
+                                    'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png',
+                                    width: 20,
+                                  ),
+                                  title: Text(profiles[index].name),
+                                  trailing: Icon(
+                                    Icons.arrow_forward_ios_outlined,
+                                    size: 20,
+                                    color: Colors.grey.shade400,
+                                  ),
+                                );
+                              }),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                if (messages.isEmpty) {
+                  return const Expanded(
+                    child: Text('No messages yet.'),
+                  );
+                }
+
+                list.clear();
+                // dividers.clear();
+
+                messages.sort((b, a) => a.createdAt.compareTo(b.createdAt));
+                for (final message in messages) {
+                  list.add(MessageItem(
+                    message: message,
+                    profile: profiles.firstWhere(
+                        (profile) => profile.uuid == message.createdBy),
+                    isProfile: message.createdBy == user.uuid,
+                    position: MessagePosition.middle,
+                    isRecipient: message.recipients.contains(user.uuid),
+                  ));
+                }
+
+                for (int index = 0; index < list.length; index++) {
+                  final nextItem =
+                      list[index + 1 < list.length ? index + 1 : index];
+
+                  final prevItem = list[index - 1 >= 0 ? index - 1 : index];
+
+                  final isLastMessage =
+                      list[index].createdBy != nextItem.createdBy;
+
+                  final isFirstMessage =
+                      list[index].createdBy != prevItem.createdBy;
+
+                  final isSoloMessage = isFirstMessage && isLastMessage;
+
+                  if (isLastMessage) {
+                    list[index] = MessageItem(
+                      message: messages.firstWhere((message) =>
+                          message.createdAt == list[index].createdAt),
+                      profile: profiles.firstWhere(
+                          (profile) => profile.uuid == list[index].createdBy),
+                      isProfile: list[index].createdBy == widget.profile?.uuid,
+                      position: MessagePosition.first,
+                    );
+                  }
+
+                  if (isFirstMessage) {
+                    list[index] = MessageItem(
+                      message: messages.firstWhere((message) =>
+                          message.createdAt == list[index].createdAt),
+                      profile: profiles.firstWhere(
+                          (profile) => profile.uuid == list[index].createdBy),
+                      isProfile: list[index].createdBy == widget.profile?.uuid,
+                      position: MessagePosition.last,
+                    );
+                  }
+
+                  if (isSoloMessage) {
+                    list[index] = MessageItem(
+                      message: messages.firstWhere((message) =>
+                          message.createdAt == list[index].createdAt),
+                      profile: profiles.firstWhere(
+                          (profile) => profile.uuid == list[index].createdBy),
+                      isProfile: list[index].createdBy == widget.profile?.uuid,
+                      position: MessagePosition.middle,
+                      isSolo: true,
+                    );
+                  }
+
+                  list[0] = MessageItem(
+                    message: messages.firstWhere(
+                        (message) => message.createdAt == list[0].createdAt),
+                    profile: profiles.firstWhere(
+                        (profile) => profile.uuid == list[0].createdBy),
+                    isProfile: list[0].createdBy == widget.profile?.uuid,
+                    position: MessagePosition.last,
+                  );
+
+                  // if (!dividers.any((d) => d.createdAt
+                  //     .isSameMinuteAs(list[index].createdAt))) {
+                  //   dividers.add(
+                  //     MessageDividerItem(
+                  //       list[index].createdAt,
+                  //     ),
+                  //   );
+                  // }
+                }
+
+                // dividers.removeAt(0);
+
+                // list.addAll(dividers);
+
+                list.sort((b, a) => a.createdAt.compareTo(b.createdAt));
+
                 return Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 16),
-                      const ChappyTitle(
-                        title: 'Search profile',
-                      ),
-                      const SizedBox(height: 16),
-                      Expanded(
-                        child: ListView.builder(
-                            itemCount: profiles.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return ChappyListTile(
-                                onPressed: () => controller
-                                    .setRecipient(profiles[index].nickname),
-                                leading: Image.network(
-                                  'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png',
-                                  width: 20,
-                                ),
-                                title: Text(profiles[index].name),
-                                trailing: Icon(
-                                  Icons.arrow_forward_ios_outlined,
-                                  size: 20,
-                                  color: Colors.grey.shade400,
-                                ),
-                              );
-                            }),
-                      ),
-                    ],
-                  ),
-                );
-              }
-
-              return Expanded(
-                child: widget.chat == null
-                    ? Container(
-                        alignment: Alignment.center,
-                        child: ChappyButton(
-                          onPressed: () => Navigator.push(
+                  child: widget.chat == null
+                      ? Container(
+                          alignment: Alignment.center,
+                          child: ChappyButton(
+                            onPressed: () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ChatCreatePage(
-                                        profile: widget.profile,
-                                      ))),
-                          title: 'Create chat',
-                        ),
-                      )
-                    : Observer(builder: (_) {
-                        final messages = controller.messages;
-
-                        if (messages.isEmpty) {
-                          return const Center(
-                            child: Text('No messages yet.'),
-                          );
-                        }
-
-                        list.clear();
-                        dividers.clear();
-
-                        for (final message in messages) {
-                          list.add(MessageItem(
-                            message: message,
-                            profile: profiles.firstWhere(
-                                (profile) => profile.uuid == message.createdBy),
-                            isProfile:
-                                message.createdBy == widget.profile?.uuid,
-                            position: MessagePosition.middle,
-                          ));
-                        }
-
-                        for (int index = 0; index < messages.length; index++) {
-                          final nextItem =
-                              list[index + 1 < list.length ? index + 1 : index];
-
-                          final prevItem =
-                              list[index - 1 >= 0 ? index - 1 : index];
-
-                          final isLastMessage =
-                              list[index].createdBy != nextItem.createdBy;
-
-                          final isFirstMessage =
-                              list[index].createdBy != prevItem.createdBy;
-
-                          final isSoloMessage = isFirstMessage && isLastMessage;
-
-                          if (isLastMessage) {
-                            list[index] = MessageItem(
-                              message: messages.firstWhere((message) =>
-                                  message.createdAt == list[index].createdAt),
-                              profile: profiles.firstWhere((profile) =>
-                                  profile.uuid == list[index].createdBy),
-                              isProfile:
-                                  list[index].createdBy == widget.profile?.uuid,
-                              position: MessagePosition.first,
-                            );
-                          }
-
-                          if (isFirstMessage) {
-                            list[index] = MessageItem(
-                              message: messages.firstWhere((message) =>
-                                  message.createdAt == list[index].createdAt),
-                              profile: profiles.firstWhere((profile) =>
-                                  profile.uuid == list[index].createdBy),
-                              isProfile:
-                                  list[index].createdBy == widget.profile?.uuid,
-                              position: MessagePosition.last,
-                            );
-                          }
-
-                          if (isSoloMessage) {
-                            list[index] = MessageItem(
-                              message: messages.firstWhere((message) =>
-                                  message.createdAt == list[index].createdAt),
-                              profile: profiles.firstWhere((profile) =>
-                                  profile.uuid == list[index].createdBy),
-                              isProfile:
-                                  list[index].createdBy == widget.profile?.uuid,
-                              position: MessagePosition.middle,
-                              isSolo: true,
-                            );
-                          }
-
-                          list[0] = MessageItem(
-                            message: messages.firstWhere((message) =>
-                                message.createdAt == list[0].createdAt),
-                            profile: profiles.firstWhere((profile) =>
-                                profile.uuid == list[index].createdBy),
-                            isProfile:
-                                list[0].createdBy == widget.profile?.uuid,
-                            position: MessagePosition.last,
-                          );
-
-                          // if (!dividers.any((d) => d.createdAt
-                          //     .isSameMinuteAs(list[index].createdAt))) {
-                          //   dividers.add(
-                          //     MessageDividerItem(
-                          //       list[index].createdAt,
-                          //     ),
-                          //   );
-                          // }
-                        }
-
-                        // dividers.removeAt(0);
-
-                        // list.addAll(dividers);
-
-                        list.sort((b, a) => a.compareTo(b));
-
-                        return ListView.builder(
-                            reverse: true,
-                            itemCount: list.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return list[index];
-                            });
-                      }),
-              );
-            },
-          ),
-          Observer(
-            builder: (_) {
-              if (controller.recipient.isNotEmpty) {
-                return Container(
+                                builder: (context) => ChatCreatePage(
+                                  profile: widget.profile,
+                                ),
+                              ),
+                            ),
+                            title: 'Create chat',
+                          ),
+                        )
+                      : ListView.builder(
+                          reverse: true,
+                          itemCount: list.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return list[index];
+                          }),
+                );
+              },
+            ),
+            Observer(
+              builder: (_) {
+                if (controller.recipient.isNotEmpty) {
+                  return Container(
                     height: 50,
                     width: double.infinity,
-                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       boxShadow: [
@@ -343,32 +348,45 @@ class _ChatPageState extends State<ChatPage> {
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 5,
                           blurRadius: 7,
-                          offset: Offset(0, 3), // changes position of shadow
+                          offset:
+                              const Offset(0, 3), // changes position of shadow
                         ),
                       ],
                     ),
-                    child: Row(
-                      children: [
-                        ChappySquaredCheckbox(
-                          isSelected: controller.isPrivate,
+                    child: Observer(
+                      builder: (_) => Container(
+                        padding: const EdgeInsets.all(16),
+                        height: 36,
+                        child: GestureDetector(
+                          onTap: () => controller.togglePrivate(),
+                          child: Row(
+                            children: [
+                              ChappySquaredCheckbox(
+                                isSelected: controller.isPrivate,
+                              ),
+                              Container(
+                                width: 8,
+                                color: Colors.transparent,
+                              ),
+                              const Text(
+                                'Private message',
+                                style: ChappyTexts.body2,
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(width: 8),
-                        const Text(
-                          'Private message',
-                          style: ChappyTexts.body2,
-                        ),
-                      ],
-                    ));
-              }
-              return Container();
-            },
-          ),
-          Observer(
-            builder: (_) => ChatInput(
+                      ),
+                    ),
+                  );
+                }
+                return Container();
+              },
+            ),
+            ChatInput(
               controller: controller,
             ),
-          ),
-        ]),
+          ],
+        ),
         drawer: ChatDrawer(
           controller: controller,
         ),

@@ -11,7 +11,7 @@ class FirebaseModel {
 
   FirebaseModel(this.uuid, this.createdAt) {
     uuid = const Uuid().v1();
-    createdAt = DateTime.now();
+    createdAt = DateTime.now().toLocal();
   }
 
   FirebaseModel.fromMap(Map<String, dynamic> map)

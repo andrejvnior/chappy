@@ -46,18 +46,21 @@ class _SignUpPageState extends State<SignUpPage> {
                 ChappyTextInput(
                   hintText: 'Email',
                   onChanged: controller.setEmail,
+                  maxLenght: 75,
                 ),
                 const SizedBox(height: 16),
                 ChappyTextInput(
                   hintText: 'Password',
                   onChanged: controller.setPassword,
                   isPassword: true,
+                  maxLenght: 42,
                 ),
                 const SizedBox(height: 16),
                 ChappyTextInput(
                   hintText: 'Confirm password',
                   onChanged: controller.setConfirmPassword,
                   isPassword: true,
+                  maxLenght: 42,
                 ),
                 const SizedBox(height: 16),
                 Row(

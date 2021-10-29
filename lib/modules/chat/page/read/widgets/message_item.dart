@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projects/core/extensions.dart';
+import 'package:projects/modules/auth/pages/splash/splash_page.dart';
 import 'package:projects/modules/chat/models/content_item.dart';
 import 'package:projects/modules/chat/models/message.dart';
 import 'package:projects/modules/profile/models/profile.dart';
@@ -14,6 +15,7 @@ class MessageItem extends ContentItem {
   final Message message;
   final Profile profile;
   final bool isProfile;
+  final bool isRecipient;
   final bool isSolo;
   final MessagePosition position;
 
@@ -21,6 +23,7 @@ class MessageItem extends ContentItem {
     required this.message,
     required this.profile,
     this.isProfile = false,
+    this.isRecipient = false,
     this.isSolo = false,
     required this.position,
   });
@@ -53,103 +56,120 @@ class MessageItem extends ContentItem {
     } else {
       topRight = const Radius.circular(12);
       bottomRight = const Radius.circular(12);
-      if (position == MessagePosition.last) {
+      if (position == MessagePosition.last || isSolo) {
         bottomLeft = const Radius.circular(12);
       }
     }
 
+    final isDirect = message.recipients.isNotEmpty &&
+        message.recipients.any((recipient) => recipient == user.uuid);
+
+    final isPrivate = message.isPrivate && isDirect;
+
+    final isHidden = message.isPrivate && !isDirect;
+
+    if (isHidden) return Container();
+
     return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        margin: EdgeInsets.only(
-            bottom: position == MessagePosition.first ||
-                    position == MessagePosition.middle
-                ? 2
-                : 16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment:
-              isProfile ? MainAxisAlignment.end : MainAxisAlignment.start,
-          children: [
-            if (!isProfile)
-              Container(
-                width: 24,
-                height: 24,
-                margin: const EdgeInsets.only(right: 4),
-                child: position == MessagePosition.first || isSolo
-                    ? ChappyAvatar(
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProfilePage(profile: profile),
-                          ),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      margin: EdgeInsets.only(
+          bottom: position == MessagePosition.first ||
+                  position == MessagePosition.middle
+              ? 2
+              : 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment:
+            isProfile ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: [
+          if (!isProfile)
+            Container(
+              width: 24,
+              height: 24,
+              margin: const EdgeInsets.only(right: 4),
+              child: position == MessagePosition.first || isSolo
+                  ? ChappyAvatar(
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfilePage(profile: profile),
                         ),
-                        image: profile.picture,
-                      )
-                    : Container(),
-              ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (position == MessagePosition.first)
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Text(
-                      profile.nickname,
-                      style: ChappyTexts.caption
-                          .apply(color: ChappyColors.primaryColor),
-                    ),
-                  ),
-                Align(
-                  alignment:
-                      isProfile ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.85,
-                    ),
-                    decoration: BoxDecoration(
-                        color: isProfile
-                            ? ChappyColors.primaryColor
-                            : ChappyColors.grey900,
-                        borderRadius: BorderRadius.only(
-                          topLeft: topLeft,
-                          topRight: topRight,
-                          bottomLeft: bottomLeft,
-                          bottomRight: bottomRight,
-                        )),
-                    child: RichText(
-                      text: TextSpan(
-                          text: message.createdAt.abbrDate,
-                          style: const TextStyle(
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w900,
-                            fontSize: 14,
-                            letterSpacing: 0.25,
-                            color: ChappyColors.primaryColor,
-                          ),
-                          children: [
-                            const WidgetSpan(
-                              child: SizedBox(
-                                width: 4,
-                              ),
-                            ),
-                            TextSpan(
-                              text: position.toString() +
-                                  " " +
-                                  isSolo.toString() +
-                                  " " +
-                                  createdBy,
-                              style: ChappyTexts.body2.apply(
-                                color: isProfile ? Colors.white : Colors.black,
-                              ),
-                            ),
-                          ]),
-                    ),
+                      ),
+                      image: profile.picture,
+                    )
+                  : Container(),
+            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (!isProfile && (position == MessagePosition.first || isSolo))
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Text(
+                    profile.nickname,
+                    style: ChappyTexts.caption
+                        .apply(color: ChappyColors.primaryColor),
                   ),
                 ),
-              ],
-            )
-          ],
-        ));
+              Align(
+                alignment:
+                    isProfile ? Alignment.centerRight : Alignment.centerLeft,
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.85,
+                  ),
+                  decoration: BoxDecoration(
+                      color: isProfile
+                          ? ChappyColors.primaryColor
+                          : isDirect
+                              ? ChappyColors.lightColor
+                              : ChappyColors.grey100,
+                      borderRadius: BorderRadius.only(
+                        topLeft: topLeft,
+                        topRight: topRight,
+                        bottomLeft: bottomLeft,
+                        bottomRight: bottomRight,
+                      )),
+                  child: RichText(
+                    text: TextSpan(
+                        children: [
+                          const WidgetSpan(
+                            child: SizedBox(
+                              width: 4,
+                            ),
+                          ),
+                          TextSpan(
+                            text: message.content,
+                            style: ChappyTexts.body2.apply(
+                              color: isProfile ? Colors.white : Colors.black,
+                            ),
+                          ),
+                          const WidgetSpan(
+                            child: SizedBox(
+                              width: 4,
+                            ),
+                          ),
+                          TextSpan(
+                            text: message.createdAt.abbrDate,
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w900,
+                              fontSize: 14,
+                              letterSpacing: 0.25,
+                              color: isProfile
+                                  ? ChappyColors.lightColor
+                                  : ChappyColors.primaryColor,
+                            ),
+                          ),
+                        ]),
+                  ),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
 }

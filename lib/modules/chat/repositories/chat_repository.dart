@@ -39,8 +39,9 @@ class ChatRepository {
   Stream<List<Message>> messages(Chat chat) {
     final messages = collection.doc(chat.uuid).collection('messages');
 
-    return messages.snapshots().map((query) =>
-        query.docs.map((doc) => Message.fromMap(doc.data())).toList());
+    return messages.snapshots().map((query) {
+      return query.docs.map((doc) => Message.fromMap(doc.data())).toList();
+    });
   }
 
   Future<SaveResult> enter(Member member, Chat chat) {

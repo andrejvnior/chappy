@@ -30,9 +30,7 @@ class ChatInput extends StatelessWidget {
                 onChanged: controller.setText,
                 hintText: 'Send message',
                 controller: textEditingController,
-                maxLenght: controller.profiles.isNotEmpty
-                    ? 180
-                    : controller.text.length,
+                maxLenght: 180,
               );
             }),
           ),

@@ -9,6 +9,7 @@ class ChappyTextInput extends StatefulWidget {
   final Widget? prefix;
   final String? prefixText;
   final Widget? suffixIcon;
+  final int? maxLines;
   final BorderRadius? borderRadius;
   final Function(String)? onChanged;
   final String errorMessage;
@@ -25,6 +26,7 @@ class ChappyTextInput extends StatefulWidget {
     this.prefix,
     this.prefixText,
     this.suffixIcon,
+    this.maxLines,
     this.borderRadius,
     this.onChanged,
     this.errorMessage = '',
@@ -56,8 +58,7 @@ class _ChappyTextInputState extends State<ChappyTextInput> {
           height: 50,
           child: HashTagTextField(
             keyboardType: TextInputType.multiline,
-            minLines: 1,
-            maxLines: obscureText ? 1 : 4,
+            maxLines: widget.maxLines ?? 1,
             controller: widget.controller,
             obscureText: obscureText,
             onChanged: widget.onChanged,
@@ -75,9 +76,10 @@ class _ChappyTextInputState extends State<ChappyTextInput> {
               print("detection finished");
             },
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               fillColor: ChappyColors.grey100,
               filled: true,
+              counterText: '',
               hintText: widget.hintText,
               prefix: widget.prefix,
               prefixText: widget.prefixText,

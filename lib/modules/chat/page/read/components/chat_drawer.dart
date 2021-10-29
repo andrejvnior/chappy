@@ -28,7 +28,6 @@ class ChatDrawer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 16),
-            const SizedBox(height: 16),
             ChappyTitle(
               title: 'Online (${list.length})',
             ),
@@ -36,16 +35,13 @@ class ChatDrawer extends StatelessWidget {
               child: ListView.builder(
                   itemCount: list.length,
                   itemBuilder: (BuildContext context, int index) {
-                    // TODO: Substitute image
                     return ChappyListTile(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) =>
-                                ProfilePage(
-                                    profile: user,
-                                    other: list[index]),
+                                ProfilePage(profile: user, other: list[index]),
                           ),
                         );
                       },
@@ -59,19 +55,18 @@ class ChatDrawer extends StatelessWidget {
                   }),
             ),
             ChappyButton(
-              onPressed: () =>
-                  controller.exit().whenComplete(
-                        () =>
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    HomePage(
-                                      profile: user,
-                                    ))),
+              onPressed: () => controller.exit().whenComplete(
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(
+                          profile: user,
+                        ),
+                      ),
+                    ),
                   ),
               title: 'Get out',
-            )
+            ),
           ],
         );
       }),

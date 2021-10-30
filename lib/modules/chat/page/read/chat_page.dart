@@ -15,6 +15,7 @@ import 'package:projects/themes/chappy_texts.dart';
 import 'package:projects/widgets/chappy_avatar.dart';
 import 'package:projects/widgets/chappy_button.dart';
 import 'package:projects/widgets/chappy_icon.dart';
+import 'package:projects/widgets/chappy_icon_counter.dart';
 import 'package:projects/widgets/chappy_list_tile.dart';
 import 'package:projects/widgets/chappy_squared_checkbox.dart';
 import 'package:projects/widgets/chappy_title.dart';
@@ -155,11 +156,12 @@ class _ChatPageState extends State<ChatPage> {
                         ),
                       ),
                     ),
-                    ChappyIcon(
-                      onPressed: () {},
-                      icon: ChappyIcons.search,
-                      color: ChappyColors.primaryColor,
-                    ),
+                    Observer(
+                      builder: (_) => ChappyIconCounter(
+                        icon: ChappyIcons.mention,
+                        value: controller.notifications.length,
+                      ),
+                    )
                   ],
                 );
               },

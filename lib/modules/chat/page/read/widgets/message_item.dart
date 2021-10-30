@@ -64,9 +64,9 @@ class MessageItem extends ContentItem {
     final isDirect = message.recipients.isNotEmpty &&
         message.recipients.any((recipient) => recipient == user.uuid);
 
-    final isPrivate = message.isPrivate && isDirect;
+    final isPrivate = message.private && isDirect;
 
-    final isHidden = message.isPrivate && !isDirect;
+    final isHidden = message.private && !isDirect;
 
     if (isHidden) return Container();
 
@@ -132,42 +132,41 @@ class MessageItem extends ContentItem {
                         bottomRight: bottomRight,
                       )),
                   child: RichText(
-                    text: TextSpan(
-                        children: [
-                          const WidgetSpan(
-                            child: SizedBox(
-                              width: 4,
-                            ),
-                          ),
-                          TextSpan(
-                            text: message.content,
-                            style: ChappyTexts.body2.apply(
-                              color: isProfile ? Colors.white : Colors.black,
-                            ),
-                          ),
-                          const WidgetSpan(
-                            child: SizedBox(
-                              width: 4,
-                            ),
-                          ),
-                          TextSpan(
-                            text: message.createdAt.abbrDate,
-                            style: TextStyle(
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w900,
-                              fontSize: 14,
-                              letterSpacing: 0.25,
-                              color: isProfile
-                                  ? ChappyColors.lightColor
-                                  : ChappyColors.primaryColor,
-                            ),
-                          ),
-                        ]),
+                    text: TextSpan(children: [
+                      const WidgetSpan(
+                        child: SizedBox(
+                          width: 4,
+                        ),
+                      ),
+                      TextSpan(
+                        text: message.content,
+                        style: ChappyTexts.body2.apply(
+                          color: isProfile ? Colors.white : Colors.black,
+                        ),
+                      ),
+                      const WidgetSpan(
+                        child: SizedBox(
+                          width: 4,
+                        ),
+                      ),
+                      TextSpan(
+                        text: message.createdAt.abbrDate,
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 14,
+                          letterSpacing: 0.25,
+                          color: isProfile
+                              ? ChappyColors.lightColor
+                              : ChappyColors.primaryColor,
+                        ),
+                      ),
+                    ]),
                   ),
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

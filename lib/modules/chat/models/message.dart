@@ -4,13 +4,15 @@ class Message extends FirebaseModel {
   final String content;
   final String createdBy;
   final List<dynamic> recipients;
-  final bool isPrivate;
+  final bool private;
+  final bool viewed;
 
   Message({
     this.content = '',
     this.createdBy = '',
     this.recipients = const <dynamic>[],
-    this.isPrivate = false,
+    this.private = false,
+    this.viewed = false,
     String uuid = '',
     DateTime? createdAt,
   }) : super(uuid, createdAt = createdAt ?? DateTime.now());
@@ -19,7 +21,8 @@ class Message extends FirebaseModel {
       : content = map['message'] as String,
         createdBy = map['createdBy'] as String,
         recipients = map['recipients'] as List<dynamic>,
-        isPrivate = map['isPrivate'] as bool,
+        private = map['private'] as bool,
+        viewed = map['viewed'] as bool,
         super.fromMap(map);
 
   @override
@@ -30,7 +33,8 @@ class Message extends FirebaseModel {
       'createdBy': createdBy,
       'createdAt': createdAt,
       'recipients': recipients,
-      'isPrivate': isPrivate,
+      'private': private,
+      'viewed': viewed,
     };
   }
 }

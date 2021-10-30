@@ -1,4 +1,5 @@
 import 'package:mobx/mobx.dart';
+import 'package:projects/modules/auth/pages/splash/splash_page.dart';
 import 'package:projects/modules/chat/models/chat.dart';
 import 'package:projects/modules/chat/models/member.dart';
 import 'package:projects/modules/chat/models/message.dart';
@@ -94,7 +95,7 @@ abstract class ChatControllerBase with Store {
       content: text,
       createdBy: profile?.uuid ?? '',
       recipients: recipients,
-      isPrivate: isPrivate,
+      private: isPrivate,
     );
     await chatRepository
         .sendMessage(message, chat!)
@@ -113,6 +114,16 @@ abstract class ChatControllerBase with Store {
     list = list.where((member) => member.online).toList();
 
     return list;
+  }
+
+  @computed
+  List<Message> get notifications {
+    if (messages.isEmpty) return [];
+
+    return messages
+        .where((message) =>
+            message.recipients.any((recipient) => recipient == user.uuid))
+        .toList();
   }
 
   @action
